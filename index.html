@@ -97,19 +97,23 @@
             background: #e2e8f0;
             border-radius: 10px;
         }
+
+        #subEnabled:checked + .toggle-track .toggle-thumb {
+            transform: translateX(1.25rem);
+        }
     </style>
 </head>
 <body class="pb-12">
 
-    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
+    <header class="sticky top-0 z-40 bg-slate-100/95 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
             <div class="w-full flex items-center justify-between gap-4">
                 <h1 onclick="switchTab('home')" class="text-2xl md:text-[1.7rem] font-black tracking-tight text-slate-900 cursor-pointer select-none whitespace-nowrap">
                     PartNest <span class="text-violet-500 italic font-extrabold">B</span>
                 </h1>
                 <input type="file" id="jsonFileInput" accept="application/json,.json" class="hidden">
-                <div class="relative">
-                    <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="text-slate-500 hover:text-slate-700 p-1.5 flex items-center justify-center transition shrink-0" aria-label="Abrir menu de opções">
+                <div class="relative mr-1">
+                    <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="text-slate-500 hover:text-slate-700 p-3 -m-1 flex items-center justify-center rounded-2xl transition shrink-0" aria-label="Abrir menu de opções">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
@@ -458,7 +462,7 @@
         </section>
     </main>
 
-    <footer class="mt-16 border-t border-slate-100 bg-white/70 backdrop-blur-sm">
+    <footer class="mt-16 border-t border-slate-200 bg-slate-100/95 backdrop-blur-sm">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div>
                 <p class="text-sm font-bold text-slate-800">
@@ -520,6 +524,18 @@
                     <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Participantes (Divisão)</label>
                     <div id="membersChecklist" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto p-3 bg-slate-50 rounded-xl border border-slate-100"></div>
                 </div>
+                <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50">
+                    <div>
+                        <p class="text-xs font-bold text-slate-700 uppercase tracking-widest">Status da Assinatura</p>
+                        <p class="text-xs text-slate-400 mt-1">Assinaturas inativas nao entram nos saldos.</p>
+                    </div>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="subEnabled" class="sr-only peer" checked>
+                        <div class="toggle-track relative w-12 h-7 bg-slate-200 rounded-full peer-checked:bg-violet-500 transition-colors shrink-0">
+                            <span class="toggle-thumb absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ease-out"></span>
+                        </div>
+                    </label>
+                </div>
                 <div class="flex gap-3 pt-4 border-t border-slate-50">
                     <button type="button" onclick="closeModal('modalSub')" class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl">Cancelar</button>
                     <button type="submit" class="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100">Salvar Assinatura</button>
@@ -530,8 +546,8 @@
 
     <!-- MODAL DETALHE DA ASSINATURA (ESTILO DASHBOARD) -->
     <div id="modalSubDetail" onclick="window.handleBackdropClick(event, 'modalSubDetail')" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-[60] flex items-center justify-center p-4">
-        <div class="bg-slate-50 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-start bg-white gap-4">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-200 flex justify-between items-start bg-slate-100 gap-4">
                 <div class="flex items-center gap-4">
                     <div id="subDetailIcon" class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg shadow-indigo-100">N</div>
                     <div>
@@ -539,17 +555,10 @@
                         <div id="subDetailBadges" class="flex gap-2 mt-1"></div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
-                    <button id="btnDeleteSub" class="w-9 h-9 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-100 transition flex items-center justify-center" aria-label="Excluir assinatura">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
-                    </button>
-                    <button id="btnEditSub" class="w-9 h-9 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition flex items-center justify-center" aria-label="Editar assinatura">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
-                    </button>
-                </div>
+                <button onclick="closeModal('modalSubDetail')" class="w-11 h-11 bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-2xl transition shrink-0 flex items-center justify-center text-lg font-bold shadow-sm" aria-label="Fechar detalhes">✕</button>
             </div>
             
-            <div class="p-8 overflow-y-auto space-y-8">
+            <div class="p-8 overflow-y-auto space-y-8 bg-white">
                 <!-- Info Grid -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center">
@@ -592,8 +601,18 @@
                 </div>
             </div>
 
-            <div class="p-4 bg-white border-t border-slate-100 text-center">
-                <button onclick="closeModal('modalSubDetail')" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition">Fechar Detalhes</button>
+            <div class="bg-slate-100 border-t border-slate-200 flex items-center justify-between gap-3 p-3">
+                <div class="flex items-center gap-2">
+                    <button id="btnDeleteSub" class="w-9 h-9 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition flex items-center justify-center" aria-label="Excluir assinatura">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
+                    </button>
+                    <button id="btnEditSub" class="w-9 h-9 bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition flex items-center justify-center" aria-label="Editar assinatura">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
+                    </button>
+                </div>
+                <button onclick="closeModal('modalSubDetail')" class="flex-1 p-4 bg-white border border-violet-200 text-center text-sm font-bold text-violet-600 hover:text-violet-700 hover:bg-violet-50 rounded-2xl transition">
+                    Fechar Detalhes
+                </button>
             </div>
         </div>
     </div>
@@ -618,22 +637,15 @@
 
     <!-- MODAL DASHBOARD INDIVIDUAL -->
     <div id="modalUserDash" onclick="window.handleBackdropClick(event, 'modalUserDash')" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-[60] flex items-center justify-center p-4">
-        <div class="bg-slate-50 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-start bg-white gap-4">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
+            <div class="p-6 border-b border-slate-200 flex justify-between items-start bg-slate-100 gap-4">
                 <div>
                     <h2 id="userDashName" class="text-xl font-extrabold text-slate-800">Nome do Usuário</h2>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Visão Geral Individual</p>
                 </div>
-                <div class="flex items-center gap-2 shrink-0">
-                    <button id="btnDeletePersonDetail" class="w-9 h-9 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-100 transition flex items-center justify-center" aria-label="Excluir pessoa">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
-                    </button>
-                    <button id="btnEditPersonDetail" class="w-9 h-9 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition flex items-center justify-center" aria-label="Editar pessoa">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
-                    </button>
-                </div>
+                <button onclick="closeModal('modalUserDash')" class="w-11 h-11 bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-2xl transition shrink-0 flex items-center justify-center text-lg font-bold shadow-sm" aria-label="Fechar detalhes">✕</button>
             </div>
-            <div class="p-8 overflow-y-auto space-y-8">
+            <div class="p-8 overflow-y-auto space-y-8 bg-white">
                 <div id="userDashSummary" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 <div>
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
@@ -650,8 +662,18 @@
                     <div id="userDashMemberList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
                 </div>
             </div>
-            <div class="p-4 bg-white border-t border-slate-100 text-center">
-                <button onclick="closeModal('modalUserDash')" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition">Fechar Detalhes</button>
+            <div class="bg-slate-100 border-t border-slate-200 flex items-center justify-between gap-3 p-3">
+                <div class="flex items-center gap-2">
+                    <button id="btnDeletePersonDetail" class="w-9 h-9 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition flex items-center justify-center" aria-label="Excluir pessoa">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
+                        </button>
+                    <button id="btnEditPersonDetail" class="w-9 h-9 bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition flex items-center justify-center" aria-label="Editar pessoa">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
+                    </button>
+                </div>
+                <button onclick="closeModal('modalUserDash')" class="flex-1 p-4 bg-white border border-violet-200 text-center text-sm font-bold text-violet-600 hover:text-violet-700 hover:bg-violet-50 rounded-2xl transition">
+                    Fechar Detalhes
+                </button>
             </div>
         </div>
     </div>
@@ -765,7 +787,8 @@
                 duration: Math.max(0, toInt(sub.duration) || 0),
                 cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
                 payerId,
-                memberIds: normalizeMemberIds(sub.memberIds || [], payerId, peopleIds)
+                memberIds: normalizeMemberIds(sub.memberIds || [], payerId, peopleIds),
+                enabled: sub.enabled !== false
             };
         }
         function normalizeState() {
@@ -872,7 +895,8 @@
                         duration: Math.max(0, toInt(sub.duration) || 0),
                         cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
                         payerId: toInt(sub.payerId),
-                        memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : []
+                        memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : [],
+                        enabled: sub.enabled !== false
                     }))
                 }
             };
@@ -900,7 +924,8 @@
                     duration: Math.max(0, toInt(sub.duration) || 0),
                     cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
                     payerId: toInt(sub.payerId),
-                    memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : []
+                    memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : [],
+                    enabled: sub.enabled !== false
                 }))
             };
             normalizeState();
@@ -911,7 +936,30 @@
             d.setMonth(d.getMonth() + toInt(duration));
             return d;
         }
+        function getSubStatus(sub, referenceDate = new Date()) {
+            const endDate = getEndDate(sub.startDate, sub.duration);
+            if (endDate && endDate < referenceDate) {
+                return {
+                    key: 'finished',
+                    label: 'Finalizada',
+                    classes: 'bg-slate-200 text-slate-600'
+                };
+            }
+            if (sub.enabled === false) {
+                return {
+                    key: 'inactive',
+                    label: 'Inativa',
+                    classes: 'bg-amber-50 text-amber-600'
+                };
+            }
+            return {
+                key: 'active',
+                label: 'Ativa',
+                classes: 'bg-emerald-50 text-emerald-600'
+            };
+        }
         function isSubActiveInMonth(sub, targetMonth, targetYear) {
+            if (sub.enabled === false) return false;
             const startDate = new Date(sub.startDate);
             const targetDate = new Date(targetYear, targetMonth, 1);
             if (targetDate < new Date(startDate.getFullYear(), startDate.getMonth(), 1)) return false;
@@ -921,8 +969,7 @@
             return true;
         }
         function isSubActiveToday(sub) {
-            const endDate = getEndDate(sub.startDate, sub.duration);
-            return !(endDate && endDate < new Date());
+            return getSubStatus(sub).key === 'active';
         }
         function getActiveSubsForMonth(month, year) {
             return state.assinaturas.filter(sub => isSubActiveInMonth(sub, month, year));
@@ -1054,6 +1101,7 @@
                     $('startDate').value = sub.startDate;
                     $('subDuration').value = sub.duration;
                     $('subCycle').value = sub.cycle;
+                    $('subEnabled').checked = sub.enabled !== false;
                     payerSelect.value = sub.payerId;
                     document.querySelectorAll('input[name="member"]').forEach(checkbox => {
                         checkbox.checked = sub.memberIds.includes(toInt(checkbox.value));
@@ -1063,6 +1111,7 @@
             } else {
                 form.reset();
                 $('startDate').value = getTodayIso();
+                $('subEnabled').checked = true;
                 document.querySelectorAll('input[name="member"]').forEach(checkbox => {
                     checkbox.checked = true;
                 });
@@ -1078,7 +1127,7 @@
             const peopleMap = getPeopleMap();
             const payer = peopleMap[sub.payerId];
             const splitPrice = getSplitPrice(sub);
-            const isActive = isSubActiveToday(sub);
+            const status = getSubStatus(sub);
 
             $('subDetailIcon').innerText = sub.name.charAt(0);
             $('subDetailName').innerText = sub.name;
@@ -1090,7 +1139,7 @@
             $('subDetailDuration').innerText = sub.duration > 0 ? `${sub.duration} meses` : 'Indeterminado';
 
             $('subDetailBadges').innerHTML = `
-                <span class="text-[9px] uppercase font-black px-2 py-0.5 rounded-full ${isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'}">${isActive ? 'Ativa' : 'Expirada'}</span>
+                <span class="text-[9px] uppercase font-black px-2 py-0.5 rounded-full ${status.classes}">${status.label}</span>
                 <span class="text-[9px] uppercase font-black px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">${sub.cycle}</span>
             `;
 
@@ -1277,7 +1326,8 @@
                 duration: $('subDuration').value,
                 cycle: $('subCycle').value,
                 payerId,
-                memberIds: normalizedMembers
+                memberIds: normalizedMembers,
+                enabled: $('subEnabled').checked
             });
 
             if (editId) {
@@ -1341,7 +1391,7 @@
             empty.classList.add('hidden');
             grid.innerHTML = state.assinaturas.map(sub => {
                 const splitPrice = getSplitPrice(sub);
-                const isActive = isSubActiveToday(sub);
+                const status = getSubStatus(sub);
                 return `
                     <div onclick="window.openSubDetail(${sub.id})" class="bg-white rounded-3xl shadow-soft border border-slate-100 overflow-hidden cursor-pointer hover:border-indigo-200 hover:shadow-indigo-50/40 transition-all group">
                         <div class="p-6">
@@ -1355,8 +1405,8 @@
                                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">${sub.cycle}</p>
                                     </div>
                                 </div>
-                                <span class="text-[9px] uppercase font-black px-2 py-0.5 rounded-full ${isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'}">
-                                    ${isActive ? 'Ativa' : 'Expirada'}
+                                <span class="text-[9px] uppercase font-black px-2 py-0.5 rounded-full ${status.classes}">
+                                    ${status.label}
                                 </span>
                             </div>
                             <div class="mt-6 border-t border-slate-50 pt-4">

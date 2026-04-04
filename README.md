@@ -101,7 +101,6 @@ Os dados são mantidos em memória no navegador e podem ser exportados em JSON. 
 ## Arquivos Principais
 
 - [index.html](/home/will/projects/Splitd/index.html): versão principal da aplicação
-- [R1/slpitd.html](/home/will/projects/Splitd/R1/slpitd.html): arquivo alternativo / histórico de evolução
 
 ## Observações Técnicas
 
