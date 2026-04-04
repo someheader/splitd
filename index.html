@@ -76,6 +76,10 @@
             pointer-events: auto;
         }
 
+        .tab-trigger-active {
+            color: var(--primary);
+        }
+
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -108,16 +112,30 @@
                 <h1 onclick="switchTab('home')" class="text-2xl md:text-[1.7rem] font-black tracking-tight text-slate-900 cursor-pointer select-none whitespace-nowrap justify-self-start">
                     PartNest <span class="text-violet-500 italic font-extrabold">B</span>
                 </h1>
-                <nav class="flex items-center justify-center gap-4 sm:gap-6 text-sm font-medium text-slate-500 overflow-x-auto whitespace-nowrap no-scrollbar min-w-0">
-                    <button onclick="switchTab('home')" id="tab-home" class="py-2 shrink-0 tab-active transition-all" aria-label="Home">
+                <nav class="hidden md:flex items-center justify-center gap-4 sm:gap-6 text-sm font-medium text-slate-500 overflow-x-auto whitespace-nowrap no-scrollbar min-w-0">
+                    <button onclick="switchTab('home')" id="tab-home" data-tab="home" class="py-2 shrink-0 tab-active transition-all" aria-label="Home">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.25 12l8.954-8.955a1.125 1.125 0 011.592 0L21.75 12M4.5 9.75V19.5A2.25 2.25 0 006.75 21.75h10.5a2.25 2.25 0 002.25-2.25V9.75M9 21.75v-6a1.5 1.5 0 011.5-1.5h3a1.5 1.5 0 011.5 1.5v6" />
                         </svg>
                     </button>
-                    <button onclick="switchTab('subs')" id="tab-subs" class="py-2 shrink-0 transition-all">Assinaturas</button>
-                    <button onclick="switchTab('people')" id="tab-people" class="py-2 shrink-0 transition-all">Pessoas</button>
-                    <button onclick="switchTab('dash')" id="tab-dash" class="py-2 shrink-0 transition-all">Dashboard</button>
+                    <button onclick="switchTab('subs')" id="tab-subs" data-tab="subs" class="py-2 shrink-0 transition-all">Assinaturas</button>
+                    <button onclick="switchTab('people')" id="tab-people" data-tab="people" class="py-2 shrink-0 transition-all">Pessoas</button>
+                    <button onclick="switchTab('dash')" id="tab-dash" data-tab="dash" class="py-2 shrink-0 transition-all">Dashboard</button>
                 </nav>
+                <div class="relative md:hidden justify-self-center">
+                    <button onclick="window.toggleHeaderNavMenu()" id="headerNavMenuButton" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 px-3 py-2 border border-slate-200 rounded-2xl hover:bg-slate-50 transition" aria-label="Abrir menu de navegação">
+                        <span id="headerNavCurrent">Home</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 9l6 6 6-6" />
+                        </svg>
+                    </button>
+                    <div id="headerNavMenu" class="menu-panel absolute left-1/2 top-12 -translate-x-1/2 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/60 p-2 z-50">
+                        <button onclick="switchTab('home')" id="mobile-tab-home" data-tab="home" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">Home</button>
+                        <button onclick="switchTab('subs')" id="mobile-tab-subs" data-tab="subs" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">Assinaturas</button>
+                        <button onclick="switchTab('people')" id="mobile-tab-people" data-tab="people" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">Pessoas</button>
+                        <button onclick="switchTab('dash')" id="mobile-tab-dash" data-tab="dash" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">Dashboard</button>
+                    </div>
+                </div>
                 <input type="file" id="jsonFileInput" accept="application/json,.json" class="hidden">
                 <div class="relative justify-self-end">
                     <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="text-slate-500 hover:text-slate-700 p-2 flex items-center justify-center rounded-2xl transition shrink-0" aria-label="Abrir menu de opções">
@@ -1004,12 +1022,27 @@
         normalizeState();
 
         // UI NAVIGATION
+        function updateTabTriggers(tab) {
+            document.querySelectorAll('[data-tab]').forEach(button => {
+                button.classList.remove('tab-active', 'tab-trigger-active');
+            });
+            document.querySelectorAll(`[data-tab="${tab}"]`).forEach(button => {
+                if (button.id.startsWith('tab-')) button.classList.add('tab-active');
+                else button.classList.add('tab-trigger-active');
+            });
+            const labels = {
+                home: 'Home',
+                subs: 'Assinaturas',
+                people: 'Pessoas',
+                dash: 'Dashboard',
+                about: 'Sobre'
+            };
+            if ($('headerNavCurrent')) $('headerNavCurrent').innerText = labels[tab] || 'Menu';
+        }
         window.switchTab = function(tab) {
             document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(button => button.classList.remove('tab-active'));
             $(`view-${tab}`).classList.remove('hidden');
-            const tabButton = $(`tab-${tab}`);
-            if (tabButton) tabButton.classList.add('tab-active');
+            updateTabTriggers(tab);
             updateHeaderActions(tab);
             closeAllMenus();
             render();
@@ -1038,6 +1071,9 @@
         };
         window.toggleSettingsMenu = function() {
             toggleMenu('settingsMenu');
+        };
+        window.toggleHeaderNavMenu = function() {
+            toggleMenu('headerNavMenu');
         };
         window.closeSettingsMenu = function() {
             $('settingsMenu').classList.remove('open');
@@ -1358,6 +1394,7 @@
         document.addEventListener('click', (event) => {
             const menus = [
                 { menu: $('settingsMenu'), button: $('settingsMenuButton') },
+                { menu: $('headerNavMenu'), button: $('headerNavMenuButton') },
                 { menu: $('subsMenu'), button: $('subsMenuButton') },
                 { menu: $('peopleMenu'), button: $('peopleMenuButton') }
             ];
@@ -1558,6 +1595,7 @@
             loadMeta();
             loadSavedState();
             updateExportSuggestionUI();
+            updateTabTriggers('home');
             render();
         };
         window.addEventListener('beforeunload', (event) => {
