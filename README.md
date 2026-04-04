@@ -1,6 +1,6 @@
 # PartNest B
 
-Aplicação web estática para controle de assinaturas compartilhadas, divisão de custos entre pessoas e visualização de balanços mensais.
+Aplicação web estática para controle de assinaturas compartilhadas, divisão de custos entre pessoas, acompanhamento de pagamentos e visualização de balanços mensais.
 
 O projeto foi construído em HTML, CSS e JavaScript puro, com interface baseada em Tailwind via CDN. Não exige backend nem banco de dados para funcionar.
 
@@ -23,10 +23,12 @@ Ao mesmo tempo, isso traz um custo: pode ser mais dificil administrar os dados, 
 O PartNest B ajuda a:
 
 - cadastrar pessoas participantes
-- registrar assinaturas com valor, ciclo, pagador e membros
+- registrar assinaturas com valor, ciclo, pagador, membros e status ativo/inativo
+- acompanhar status de pagamento por participante em cada assinatura
 - calcular automaticamente a divisão por pessoa
 - visualizar saldos individuais no dashboard
 - acompanhar um cronograma mensal com detalhes por pessoa e por assinatura
+- compartilhar a visão geral individual como imagem
 - exportar e importar os dados em JSON
 - limpar todos os dados e recomeçar do zero
 
@@ -34,7 +36,13 @@ O PartNest B ajuda a:
 
 ### Home
 
-Página inicial com uma apresentação breve da proposta do sistema.
+Página inicial em formato de landing page com apresentação da proposta do sistema.
+
+### Sobre
+
+- página institucional com contexto do projeto
+- resumo das motivações
+- link para o repositório GitHub
 
 ### Assinaturas
 
@@ -42,25 +50,51 @@ Página inicial com uma apresentação breve da proposta do sistema.
 - edição e exclusão
 - visualização detalhada de cada assinatura
 - cálculo automático da cota por participante
+- status ativo/inativo da assinatura
+- status `Pago` ou `Pendente` por participante
+- assinaturas finalizadas por prazo aparecem como `Finalizada`
 
 ### Pessoas
 
 - cadastro de participantes
-- remoção de pessoas quando não são pagadoras de assinaturas
+- edição e remoção de pessoas
+- lista com resumo de receber, pagar, assinaturas e pendências
+- acesso à visão geral individual
 
 ### Dashboard
 
 - resumo global
+- resumo anual
 - extratos anuais por pessoa
 - balanço individual por pessoa
 - cronograma mensal com detalhes expansíveis
 - acesso direto aos modais de pessoa e assinatura a partir dos cards
+- indicadores de pendência por pessoa
+
+### Visão Geral Individual
+
+- total a receber
+- total a pagar
+- assinaturas gerenciadas
+- participações em divisões
+- status de pagamento por assinatura
+- compartilhamento como imagem
 
 ### Opções
 
+- página `Sobre`
 - importar JSON
 - exportar JSON
 - remover tudo
+
+## Persistência
+
+O PartNest B funciona em modo local-first:
+
+- os dados ficam salvos localmente no navegador com `localStorage`
+- o JSON exportado serve como backup manual e portável
+- o sistema avisa quando existem alterações ainda não exportadas
+- a importação de um backup não é tratada como alteração pendente
 
 ## Estrutura de Dados
 
@@ -83,7 +117,11 @@ Os dados são mantidos em memória no navegador e podem ser exportados em JSON. 
         "duration": 0,
         "cycle": "Mensal",
         "payerId": 1,
-        "memberIds": [1]
+        "memberIds": [1],
+        "paymentStatus": {
+          "1": "paid"
+        },
+        "enabled": true
       }
     ]
   }
@@ -96,11 +134,15 @@ Os dados são mantidos em memória no navegador e podem ser exportados em JSON. 
 2. Acesse a aba `Pessoas` para cadastrar os participantes.
 3. Acesse a aba `Assinaturas` para registrar os serviços.
 4. Use o `Dashboard` para acompanhar os saldos e detalhes mensais.
-5. Em `Opções`, exporte um backup JSON ou importe dados existentes.
+5. Em `Dashboard`, acompanhe saldos, cronogramas e extratos.
+6. Na `Visão Geral Individual`, compartilhe o cartão como imagem quando quiser.
+7. Em `Opções`, exporte um backup JSON ou importe dados existentes.
 
 ## Arquivos Principais
 
 - [index.html](/home/will/projects/Splitd/index.html): versão principal da aplicação
+- [CHANGELOG.md](/home/will/projects/Splitd/CHANGELOG.md): histórico resumido das alterações do projeto
+- [README.md](/home/will/projects/Splitd/README.md): visão geral e documentação do projeto
 
 ## Observações Técnicas
 
@@ -108,10 +150,12 @@ Os dados são mantidos em memória no navegador e podem ser exportados em JSON. 
 - Os dados persistem localmente no navegador com `localStorage`.
 - O export em JSON continua sendo recomendado como backup manual das alterações.
 - O sistema normaliza os dados importados para manter consistência entre pagador, participantes e cálculos.
+- O status de pagamento por participante também é normalizado e preservado no JSON.
+- O compartilhamento da visão individual usa geração local de imagem no navegador.
 
 ## Próximos Passos Sugeridos
 
-- persistência local com `localStorage`
 - filtros por período no dashboard
-- edição de pessoas
 - validações mais avançadas no importador JSON
+- relatórios adicionais por assinatura
+- agrupamentos e filtros por status de pagamento

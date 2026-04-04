@@ -695,6 +695,9 @@
                     <button id="btnEditPersonDetail" class="w-9 h-9 bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition flex items-center justify-center" aria-label="Editar pessoa">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
                     </button>
+                    <button id="btnSharePersonDetail" class="w-9 h-9 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 transition flex items-center justify-center" aria-label="Compartilhar visão geral">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8.625 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.5 0a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.5 0a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                    </button>
                 </div>
                 <button onclick="closeModal('modalUserDash')" class="flex-1 px-4 py-3 bg-white border border-violet-200 text-center text-sm font-bold text-violet-600 hover:text-violet-700 hover:bg-violet-50 rounded-2xl transition">
                     Fechar Detalhes
@@ -739,7 +742,8 @@
                     duration: 0,
                     cycle: "Mensal",
                     payerId: 1,
-                    memberIds: [1, 2, 3]
+                    memberIds: [1, 2, 3],
+                    paymentStatus: { 1: 'paid', 2: 'pending', 3: 'pending' }
                 },
                 {
                     id: 2,
@@ -749,7 +753,8 @@
                     duration: 0,
                     cycle: "Mensal",
                     payerId: 2,
-                    memberIds: [1, 2]
+                    memberIds: [1, 2],
+                    paymentStatus: { 1: 'pending', 2: 'paid' }
                 }
             ]
         };
@@ -760,6 +765,7 @@
             hasUnexportedChanges: false
         };
         let dashView = 'overview';
+        let currentUserDashId = null;
 
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
@@ -793,6 +799,17 @@
         function getSplitPrice(sub) {
             return sub.memberIds.length > 0 ? ceil2(sub.price / sub.memberIds.length) : sub.price;
         }
+        function getMemberOutstandingAmount(sub, memberId) {
+            if (memberId === sub.payerId) return 0;
+            return getMemberPaymentStatus(sub, memberId) === 'paid' ? 0 : getSplitPrice(sub);
+        }
+        function getPendingReceivableTotal(sub) {
+            const splitPrice = getSplitPrice(sub);
+            return sub.memberIds.reduce((total, memberId) => {
+                if (memberId === sub.payerId) return total;
+                return total + (getMemberPaymentStatus(sub, memberId) === 'paid' ? 0 : splitPrice);
+            }, 0);
+        }
         function normalizeMemberIds(memberIds, payerId, validPeopleIds) {
             const normalized = [...new Set(memberIds
                 .map(id => toInt(id))
@@ -801,9 +818,29 @@
             if (validPeopleIds.has(payerId) && !normalized.includes(payerId)) normalized.push(payerId);
             return normalized;
         }
+        function normalizePaymentStatus(paymentStatus, memberIds, payerId) {
+            return memberIds.reduce((acc, memberId) => {
+                if (memberId === payerId) {
+                    acc[memberId] = 'paid';
+                } else {
+                    acc[memberId] = paymentStatus && paymentStatus[memberId] === 'paid' ? 'paid' : 'pending';
+                }
+                return acc;
+            }, {});
+        }
+        function getMemberPaymentStatus(sub, memberId) {
+            if (memberId === sub.payerId) return 'paid';
+            return sub.paymentStatus && sub.paymentStatus[memberId] === 'paid' ? 'paid' : 'pending';
+        }
+        function getPaymentBadge(status) {
+            return status === 'paid'
+                ? { label: 'Pago', classes: 'bg-emerald-50 text-emerald-600 border-emerald-100' }
+                : { label: 'Pendente', classes: 'bg-amber-50 text-amber-600 border-amber-100' };
+        }
         function normalizeSubscription(sub) {
             const peopleIds = new Set(state.pessoas.map(person => person.id));
             const payerId = toInt(sub.payerId);
+            const memberIds = normalizeMemberIds(sub.memberIds || [], payerId, peopleIds);
             return {
                 id: toInt(sub.id),
                 name: String(sub.name || '').trim(),
@@ -812,7 +849,8 @@
                 duration: Math.max(0, toInt(sub.duration) || 0),
                 cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
                 payerId,
-                memberIds: normalizeMemberIds(sub.memberIds || [], payerId, peopleIds),
+                memberIds,
+                paymentStatus: normalizePaymentStatus(sub.paymentStatus || {}, memberIds, payerId),
                 enabled: sub.enabled !== false
             };
         }
@@ -877,6 +915,15 @@
             saveMeta();
             updateExportSuggestionUI();
         }
+        function markStateAsImported(payload) {
+            exportMeta.lastModifiedAt = null;
+            exportMeta.lastExportAt = payload && typeof payload === 'object' && payload.exportedAt
+                ? payload.exportedAt
+                : new Date().toISOString();
+            exportMeta.hasUnexportedChanges = false;
+            saveMeta();
+            updateExportSuggestionUI();
+        }
         function saveState() {
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(getExportPayload().data));
@@ -921,6 +968,7 @@
                         cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
                         payerId: toInt(sub.payerId),
                         memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : [],
+                        paymentStatus: sub.paymentStatus && typeof sub.paymentStatus === 'object' ? sub.paymentStatus : {},
                         enabled: sub.enabled !== false
                     }))
                 }
@@ -950,6 +998,7 @@
                     cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
                     payerId: toInt(sub.payerId),
                     memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : [],
+                    paymentStatus: sub.paymentStatus && typeof sub.paymentStatus === 'object' ? sub.paymentStatus : {},
                     enabled: sub.enabled !== false
                 }))
             };
@@ -1011,6 +1060,7 @@
 
                 sub.memberIds.forEach(memberId => {
                     if (memberId === sub.payerId) return;
+                    if (getMemberPaymentStatus(sub, memberId) === 'paid') return;
                     if (balance[memberId]) {
                         balance[memberId].deve += splitPrice;
                         balance[memberId].detail.push({ name: subName, value: splitPrice, type: 'Pagar' });
@@ -1201,14 +1251,22 @@
             $('subDetailMemberList').innerHTML = sub.memberIds.map(memberId => {
                 const person = peopleMap[memberId];
                 const isPayer = memberId === sub.payerId;
+                const paymentStatus = getMemberPaymentStatus(sub, memberId);
+                const paymentBadge = getPaymentBadge(paymentStatus);
                 return `
-                    <button onclick="window.openUserDashboardFromSubDetail(${memberId})" class="w-full text-left bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center hover:border-slate-200 hover:bg-slate-50 transition">
-                        <div class="flex items-center gap-3">
+                    <div class="bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center gap-3">
+                        <button onclick="window.openUserDashboardFromSubDetail(${memberId})" class="min-w-0 flex-1 text-left flex items-center gap-3 hover:text-indigo-600 transition">
                             <div class="w-2 h-2 rounded-full ${isPayer ? 'bg-emerald-400' : 'bg-slate-300'}"></div>
-                            <span class="text-xs font-bold text-slate-700">${escapeHtml(person ? person.name : 'Membro Excluído')} ${isPayer ? '(Você/Gestor)' : ''}</span>
-                        </div>
-                        <span class="text-xs font-black text-slate-500">${formatBRL(splitPrice)}</span>
-                    </button>
+                            <div class="min-w-0">
+                                <span class="block text-xs font-bold text-slate-700 truncate">${escapeHtml(person ? person.name : 'Membro Excluído')} ${isPayer ? '(Você/Gestor)' : ''}</span>
+                                <span class="block text-[10px] text-slate-400 font-bold mt-1">${formatBRL(splitPrice)}</span>
+                            </div>
+                        </button>
+                        ${isPayer
+                            ? `<span class="text-[10px] font-black px-2 py-1 rounded-full border ${paymentBadge.classes}">${paymentBadge.label}</span>`
+                            : `<button onclick="window.toggleMemberPaymentStatus(${sub.id}, ${memberId})" class="text-[10px] font-black px-2 py-1 rounded-full border ${paymentBadge.classes} hover:opacity-80 transition">${paymentBadge.label}</button>`
+                        }
+                    </div>
                 `;
             }).join('');
 
@@ -1222,6 +1280,23 @@
 
             $('modalSubDetail').classList.remove('hidden');
         };
+        window.toggleMemberPaymentStatus = function(subId, memberId) {
+            state.assinaturas = state.assinaturas.map(sub => {
+                if (sub.id !== subId) return sub;
+                const currentStatus = getMemberPaymentStatus(sub, memberId);
+                const nextStatus = currentStatus === 'paid' ? 'pending' : 'paid';
+                return normalizeSubscription({
+                    ...sub,
+                    paymentStatus: {
+                        ...sub.paymentStatus,
+                        [memberId]: nextStatus
+                    }
+                });
+            });
+            markStateAsChanged();
+            render();
+            window.openSubDetail(subId);
+        };
 
         window.openPersonModal = function() {
             $('formPerson').reset();
@@ -1233,17 +1308,185 @@
 
         window.closeModal = function(id) { $(id).classList.add('hidden'); };
 
-        window.openUserDashboard = function(userId) {
+        function getUserDashboardData(userId) {
             const peopleMap = getPeopleMap();
             const person = peopleMap[userId];
-            if (!person) return;
+            if (!person) return null;
 
             const now = new Date();
             const activeSubs = getActiveSubsForMonth(now.getMonth(), now.getFullYear());
             const payerSubs = activeSubs.filter(sub => sub.payerId === userId);
             const memberSubs = activeSubs.filter(sub => sub.memberIds.includes(userId) && sub.payerId !== userId);
-            const totalReceber = payerSubs.reduce((total, sub) => total + (sub.price - getSplitPrice(sub)), 0);
-            const totalPagar = memberSubs.reduce((total, sub) => total + getSplitPrice(sub), 0);
+            const totalReceber = payerSubs.reduce((total, sub) => total + getPendingReceivableTotal(sub), 0);
+            const totalPagar = memberSubs.reduce((total, sub) => total + getMemberOutstandingAmount(sub, userId), 0);
+
+            return {
+                person,
+                peopleMap,
+                payerSubs,
+                memberSubs,
+                totalReceber,
+                totalPagar
+            };
+        }
+
+        function getShareUserDashboardMarkup(userId) {
+            const data = getUserDashboardData(userId);
+            if (!data) return null;
+
+            const { person, peopleMap, payerSubs, memberSubs, totalReceber, totalPagar } = data;
+            const payerRows = Math.max(1, Math.ceil(payerSubs.length / 2));
+            const memberRows = Math.max(1, Math.ceil(memberSubs.length / 2));
+            const height = 320 + (payerRows * 150) + (memberRows * 150);
+            const renderEmptyState = (text) => `<div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:18px;padding:18px;text-align:center;color:#94a3b8;font-size:13px;font-style:italic;">${escapeHtml(text)}</div>`;
+            const payerCards = payerSubs.length ? payerSubs.map(sub => {
+                const splitPrice = getSplitPrice(sub);
+                const pendingMembers = sub.memberIds.filter(memberId => memberId !== sub.payerId && getMemberPaymentStatus(sub, memberId) !== 'paid').length;
+                return `
+                    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;padding:18px;">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+                            <span style="font-size:14px;font-weight:700;color:#0f172a;">${escapeHtml(sub.name)}</span>
+                            <span style="font-size:11px;font-weight:800;color:#059669;background:#ecfdf5;padding:4px 8px;border-radius:999px;">+${formatBRL(getPendingReceivableTotal(sub))}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#64748b;">
+                            <span>Valor Total: ${formatBRL(sub.price)}</span>
+                            <span>Sua cota: ${formatBRL(splitPrice)}</span>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <span style="display:inline-block;font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;${pendingMembers === 0 ? 'background:#ecfdf5;color:#059669;' : 'background:#fffbeb;color:#d97706;'}">${pendingMembers === 0 ? 'Todos pagos' : `${pendingMembers} pendente(s)`}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('') : renderEmptyState('Não gerencia nenhuma assinatura.');
+
+            const memberCards = memberSubs.length ? memberSubs.map(sub => {
+                const paymentBadge = getPaymentBadge(getMemberPaymentStatus(sub, userId));
+                return `
+                    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;padding:18px;">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+                            <span style="font-size:14px;font-weight:700;color:#0f172a;">${escapeHtml(sub.name)}</span>
+                            <span style="font-size:11px;font-weight:800;color:#e11d48;background:#fff1f2;padding:4px 8px;border-radius:999px;">-${formatBRL(getMemberOutstandingAmount(sub, userId))}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#64748b;">
+                            <span>Pagador: ${escapeHtml(peopleMap[sub.payerId]?.name || 'N/A')}</span>
+                            <span>Total: ${formatBRL(sub.price)}</span>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <span style="display:inline-block;font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;border:1px solid #e2e8f0;${paymentBadge.label === 'Pago' ? 'background:#ecfdf5;color:#059669;border-color:#bbf7d0;' : 'background:#fffbeb;color:#d97706;border-color:#fde68a;'}">${paymentBadge.label}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('') : renderEmptyState('Não participa de outras assinaturas.');
+
+            return {
+                height,
+                markup: `
+                <div xmlns="http://www.w3.org/1999/xhtml" style="width:900px;background:#f8fafc;padding:28px;font-family:'Plus Jakarta Sans',Arial,sans-serif;box-sizing:border-box;">
+                    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:28px;overflow:hidden;box-shadow:0 14px 32px rgba(15,23,42,0.08);">
+                        <div style="padding:24px 28px;border-bottom:1px solid #e2e8f0;background:#ffffff;">
+                            <div style="font-size:28px;font-weight:800;color:#0f172a;">${escapeHtml(person.name)}</div>
+                            <div style="margin-top:6px;font-size:12px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#94a3b8;">Visão Geral Individual</div>
+                        </div>
+                        <div style="padding:24px 28px;background:#f8fafc;">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+                                <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:20px;text-align:center;">
+                                    <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">Total a Receber</div>
+                                    <div style="font-size:28px;font-weight:800;color:#059669;">${formatBRL(totalReceber)}</div>
+                                </div>
+                                <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:20px;text-align:center;">
+                                    <div style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">Total a Pagar</div>
+                                    <div style="font-size:28px;font-weight:800;color:#e11d48;">${formatBRL(totalPagar)}</div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom:24px;">
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+                                    <span style="width:8px;height:8px;border-radius:999px;background:#10b981;display:inline-block;"></span>
+                                    <span style="font-size:11px;font-weight:900;letter-spacing:0.16em;text-transform:uppercase;color:#94a3b8;">Assinaturas que você gerencia</span>
+                                </div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">${payerCards}</div>
+                            </div>
+                            <div>
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+                                    <span style="width:8px;height:8px;border-radius:999px;background:#6366f1;display:inline-block;"></span>
+                                    <span style="font-size:11px;font-weight:900;letter-spacing:0.16em;text-transform:uppercase;color:#94a3b8;">Participações (Divisão)</span>
+                                </div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">${memberCards}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `
+            };
+        }
+
+        async function createImageBlobFromMarkup(markup, width = 900, height = 1200) {
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+                    <foreignObject width="100%" height="100%">${markup}</foreignObject>
+                </svg>
+            `;
+            const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            try {
+                const image = await new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = reject;
+                    img.src = url;
+                });
+                const canvas = document.createElement('canvas');
+                canvas.width = width * 2;
+                canvas.height = height * 2;
+                const context = canvas.getContext('2d');
+                context.scale(2, 2);
+                context.fillStyle = '#f8fafc';
+                context.fillRect(0, 0, width, height);
+                context.drawImage(image, 0, 0, width, height);
+                return await new Promise((resolve, reject) => {
+                    canvas.toBlob(result => result ? resolve(result) : reject(new Error('Não foi possível gerar a imagem.')), 'image/png');
+                });
+            } finally {
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        window.shareUserDashboardImage = async function() {
+            if (!currentUserDashId) return;
+            try {
+                const shareCard = getShareUserDashboardMarkup(currentUserDashId);
+                if (!shareCard) throw new Error('Resumo não disponível.');
+                const blob = await createImageBlobFromMarkup(shareCard.markup, 900, shareCard.height);
+                const fileName = `partnestb-${Date.now()}.png`;
+                const file = new File([blob], fileName, { type: 'image/png' });
+
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Visão Geral Individual',
+                        text: 'Resumo compartilhado pelo PartNest B'
+                    });
+                    return;
+                }
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+                showConfirm('Imagem pronta', 'O cartão foi baixado como imagem para você compartilhar.', () => {}, true, 'success');
+            } catch (error) {
+                showConfirm('Erro ao compartilhar', 'Não foi possível gerar a imagem deste cartão.', () => {}, true);
+            }
+        };
+
+        window.openUserDashboard = function(userId) {
+            const data = getUserDashboardData(userId);
+            if (!data) return;
+            const { person, peopleMap, payerSubs, memberSubs, totalReceber, totalPagar } = data;
+            currentUserDashId = userId;
 
             $('userDashName').innerText = person.name;
             $('userDashSummary').innerHTML = `
@@ -1258,19 +1501,25 @@
             `;
             $('userDashPayerList').innerHTML = payerSubs.length ? payerSubs.map(sub => {
                 const splitPrice = getSplitPrice(sub);
+                const pendingMembers = sub.memberIds.filter(memberId => memberId !== sub.payerId && getMemberPaymentStatus(sub, memberId) !== 'paid').length;
                 return `
                     <button onclick="window.openSubDetailFromUserDash(${sub.id})" class="w-full text-left bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:border-slate-200 hover:bg-slate-50 transition">
-                        <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-slate-800">${escapeHtml(sub.name)}</span><span class="text-[10px] font-black text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full">+${formatBRL(sub.price - splitPrice)}</span></div>
+                        <div class="flex justify-between items-start mb-2 gap-2"><span class="text-xs font-bold text-slate-800">${escapeHtml(sub.name)}</span><span class="text-[10px] font-black text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full">+${formatBRL(getPendingReceivableTotal(sub))}</span></div>
                         <div class="flex justify-between text-[10px] text-slate-400"><span>Valor Total: ${formatBRL(sub.price)}</span><span>Sua cota: ${formatBRL(splitPrice)}</span></div>
+                        <div class="mt-2"><span class="text-[10px] font-black px-2 py-0.5 rounded-full ${pendingMembers === 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}">${pendingMembers === 0 ? 'Todos pagos' : `${pendingMembers} pendente(s)`}</span></div>
                     </button>
                 `;
             }).join('') : '<p class="text-xs text-slate-400 italic">Não gerencia nenhuma assinatura.</p>';
-            $('userDashMemberList').innerHTML = memberSubs.length ? memberSubs.map(sub => `
-                <button onclick="window.openSubDetailFromUserDash(${sub.id})" class="w-full text-left bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:border-slate-200 hover:bg-slate-50 transition">
-                    <div class="flex justify-between items-start mb-2"><span class="text-xs font-bold text-slate-800">${escapeHtml(sub.name)}</span><span class="text-[10px] font-black text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">-${formatBRL(getSplitPrice(sub))}</span></div>
-                    <div class="flex justify-between text-[10px] text-slate-400"><span>Pagador: ${escapeHtml(peopleMap[sub.payerId]?.name || 'N/A')}</span><span>Total: ${formatBRL(sub.price)}</span></div>
-                </button>
-            `).join('') : '<p class="text-xs text-slate-400 italic">Não participa de outras assinaturas.</p>';
+            $('userDashMemberList').innerHTML = memberSubs.length ? memberSubs.map(sub => {
+                const paymentBadge = getPaymentBadge(getMemberPaymentStatus(sub, userId));
+                return `
+                    <button onclick="window.openSubDetailFromUserDash(${sub.id})" class="w-full text-left bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:border-slate-200 hover:bg-slate-50 transition">
+                        <div class="flex justify-between items-start mb-2 gap-2"><span class="text-xs font-bold text-slate-800">${escapeHtml(sub.name)}</span><span class="text-[10px] font-black text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full">-${formatBRL(getMemberOutstandingAmount(sub, userId))}</span></div>
+                        <div class="flex justify-between text-[10px] text-slate-400"><span>Pagador: ${escapeHtml(peopleMap[sub.payerId]?.name || 'N/A')}</span><span>Total: ${formatBRL(sub.price)}</span></div>
+                        <div class="mt-2"><span class="text-[10px] font-black px-2 py-0.5 rounded-full border ${paymentBadge.classes}">${paymentBadge.label}</span></div>
+                    </button>
+                `;
+            }).join('') : '<p class="text-xs text-slate-400 italic">Não participa de outras assinaturas.</p>';
             $('btnDeletePersonDetail').onclick = () => {
                 closeModal('modalUserDash');
                 window.deletePerson(userId);
@@ -1278,6 +1527,9 @@
             $('btnEditPersonDetail').onclick = () => {
                 closeModal('modalUserDash');
                 window.openPersonEditor(userId);
+            };
+            $('btnSharePersonDetail').onclick = () => {
+                window.shareUserDashboardImage();
             };
             $('modalUserDash').classList.remove('hidden');
         };
@@ -1300,12 +1552,17 @@
             window.openUserDashboard(userId);
         };
 
-        window.showConfirm = function(title, text, onConfirm, isAlert = false) {
+        window.showConfirm = function(title, text, onConfirm, isAlert = false, variant = 'danger') {
             const actionBtn = $('confirmActionBtn');
             const cancelBtn = $('confirmCancelBtn');
+            const confirmIcon = $('confirmIcon');
 
             $('confirmTitle').innerText = title;
             $('confirmText').innerText = text;
+            confirmIcon.className = `w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${variant === 'success' ? 'bg-emerald-50 text-emerald-500' : 'bg-rose-50 text-rose-500'}`;
+            confirmIcon.innerHTML = variant === 'success'
+                ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M5 13l4 4L19 7" /></svg>`
+                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
             if (isAlert) {
                 cancelBtn.classList.add('hidden');
                 actionBtn.innerText = "Ok";
@@ -1313,6 +1570,7 @@
                 cancelBtn.classList.remove('hidden');
                 actionBtn.innerText = "Confirmar";
             }
+            actionBtn.className = `flex-1 py-3 text-white font-bold rounded-xl transition ${variant === 'success' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-rose-500 hover:bg-rose-600'}`;
             actionBtn.onclick = () => {
                 onConfirm();
                 closeModal('modalConfirm');
@@ -1362,6 +1620,7 @@
             e.preventDefault();
 
             const editId = $('editId').value;
+            const existingSub = editId ? state.assinaturas.find(sub => sub.id === toInt(editId)) : null;
             const payerId = toInt($('subPayerId').value);
             const memberIds = Array.from(document.querySelectorAll('input[name="member"]:checked')).map(checkbox => toInt(checkbox.value));
             const peopleIds = new Set(state.pessoas.map(person => person.id));
@@ -1381,6 +1640,7 @@
                 cycle: $('subCycle').value,
                 payerId,
                 memberIds: normalizedMembers,
+                paymentStatus: existingSub ? existingSub.paymentStatus : {},
                 enabled: $('subEnabled').checked
             });
 
@@ -1401,9 +1661,9 @@
                 const content = await file.text();
                 const payload = JSON.parse(content);
                 applyImportedState(payload);
-                markStateAsChanged();
+                markStateAsImported(payload);
                 render();
-                showConfirm("Importação concluída", "Os dados do arquivo JSON foram carregados com sucesso.", () => {}, true);
+                showConfirm("Importação concluída", "Os dados do arquivo JSON foram carregados com sucesso.", () => {}, true, 'success');
             } catch (error) {
                 showConfirm("Erro ao importar", error.message || "Não foi possível ler o arquivo JSON.", () => {}, true);
             } finally {
@@ -1490,6 +1750,7 @@
                 const stats = balance[person.id] || { deve: 0, recebe: 0 };
                 const managedCount = state.assinaturas.filter(sub => sub.payerId === person.id).length;
                 const totalSubs = state.assinaturas.filter(sub => sub.memberIds.includes(person.id) || sub.payerId === person.id).length;
+                const pendingPayments = activeSubs.filter(sub => sub.memberIds.includes(person.id) && person.id !== sub.payerId && getMemberPaymentStatus(sub, person.id) !== 'paid').length;
 
                 return `
                     <button onclick="window.openUserDashboard(${person.id})" class="w-full text-left bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:border-slate-300 hover:bg-slate-50 transition-all">
@@ -1512,6 +1773,11 @@
                         <div class="mt-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
                             <span>${totalSubs} assinaturas</span>
                             <span>${managedCount} gerencia</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-[10px] font-black px-2 py-1 rounded-full ${pendingPayments === 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}">
+                                ${pendingPayments === 0 ? 'Sem pendências' : `${pendingPayments} pendente(s)`}
+                            </span>
                         </div>
                     </button>
                 `;
@@ -1564,8 +1830,9 @@
                 const liquid = stats.recebe - stats.deve;
                 const color = liquid > 0 ? 'text-emerald-600' : (liquid < 0 ? 'text-rose-500' : 'text-slate-400');
                 const label = liquid > 0 ? 'Saldo Receber' : (liquid < 0 ? 'Saldo Pagar' : 'Em dia');
+                const pendingPayments = currentSubs.filter(sub => sub.memberIds.includes(person.id) && person.id !== sub.payerId && getMemberPaymentStatus(sub, person.id) !== 'paid').length;
 
-                return `<button onclick="window.openUserDashboard(${person.id})" class="w-full text-left p-4 border border-slate-100 rounded-2xl flex justify-between items-center bg-white hover:bg-slate-50 hover:border-slate-200 transition-all group"><div><p class="font-bold text-sm text-slate-700 group-hover:text-indigo-600 transition-colors">${escapeHtml(person.name)}</p><p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Clique p/ Detalhes</p></div><div class="text-right"><p class="text-[9px] font-black uppercase ${color}">${label}</p><p class="font-bold ${color}">${formatBRL(Math.abs(liquid))}</p></div></button>`;
+                return `<button onclick="window.openUserDashboard(${person.id})" class="w-full text-left p-4 border border-slate-100 rounded-2xl flex justify-between items-center bg-white hover:bg-slate-50 hover:border-slate-200 transition-all group"><div><p class="font-bold text-sm text-slate-700 group-hover:text-indigo-600 transition-colors">${escapeHtml(person.name)}</p><p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Clique p/ Detalhes</p><p class="mt-2 text-[10px] font-black ${pendingPayments === 0 ? 'text-emerald-600' : 'text-amber-600'}">${pendingPayments === 0 ? 'Sem pendências' : `${pendingPayments} pendente(s)`}</p></div><div class="text-right"><p class="text-[9px] font-black uppercase ${color}">${label}</p><p class="font-bold ${color}">${formatBRL(Math.abs(liquid))}</p></div></button>`;
             }).join('');
 
             let monthlyHTML = "";
@@ -1581,7 +1848,8 @@
                     const stats = personStats[person.id];
                     const liquid = stats.recebe - stats.deve;
                     if (liquid === 0) return '';
-                    return `<button onclick="window.openUserDashboard(${person.id})" class="w-full text-left bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:border-slate-200 hover:bg-slate-50 transition"><div class="flex justify-between items-center mb-2"><span class="font-bold text-xs text-slate-700">${escapeHtml(person.name)}</span><span class="font-black text-xs ${liquid > 0 ? 'text-emerald-600' : 'text-rose-500'}">${formatBRL(Math.abs(liquid))}</span></div><div class="space-y-1">${stats.detail.map(detail => `<div class="flex justify-between text-[10px] text-slate-500"><span>${detail.name} <em class="opacity-60">(${detail.type})</em></span><span>${formatBRL(detail.value)}</span></div>`).join('')}</div></button>`;
+                    const pendingPayments = activeSubs.filter(sub => sub.memberIds.includes(person.id) && person.id !== sub.payerId && getMemberPaymentStatus(sub, person.id) !== 'paid').length;
+                    return `<button onclick="window.openUserDashboard(${person.id})" class="w-full text-left bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:border-slate-200 hover:bg-slate-50 transition"><div class="flex justify-between items-center mb-2"><span class="font-bold text-xs text-slate-700">${escapeHtml(person.name)}</span><span class="font-black text-xs ${liquid > 0 ? 'text-emerald-600' : 'text-rose-500'}">${formatBRL(Math.abs(liquid))}</span></div><div class="mb-2"><span class="text-[10px] font-black ${pendingPayments === 0 ? 'text-emerald-600' : 'text-amber-600'}">${pendingPayments === 0 ? 'Sem pendências' : `${pendingPayments} pendente(s)`}</span></div><div class="space-y-1">${stats.detail.map(detail => `<div class="flex justify-between text-[10px] text-slate-500"><span>${detail.name} <em class="opacity-60">(${detail.type})</em></span><span>${formatBRL(detail.value)}</span></div>`).join('')}</div></button>`;
                 }).join('')}</div></div><div><p class="text-[10px] font-black text-slate-400 uppercase mb-3 border-b pb-1">Assinaturas Ativas</p><div class="grid grid-cols-1 sm:grid-cols-3 gap-2">${activeSubs.map(sub => `<button onclick="window.openSubDetail(${sub.id})" class="w-full text-left bg-indigo-50/50 p-2 rounded-lg border border-indigo-100/50 flex justify-between items-center hover:bg-indigo-100/60 transition"><span class="text-[11px] font-bold text-indigo-700">${escapeHtml(sub.name)}</span><span class="text-[11px] font-black text-indigo-600">${formatBRL(sub.price)}</span></button>`).join('')}</div></div></div></div></div>`;
             }
 
@@ -1590,6 +1858,7 @@
                 const annualStats = annualBalance[person.id];
                 const annualNet = annualStats.recebe - annualStats.deve;
                 const relatedSubs = state.assinaturas.filter(sub => sub.memberIds.includes(person.id) || sub.payerId === person.id).length;
+                const pendingPayments = currentSubs.filter(sub => sub.memberIds.includes(person.id) && person.id !== sub.payerId && getMemberPaymentStatus(sub, person.id) !== 'paid').length;
                 const netColor = annualNet > 0 ? 'text-emerald-600' : (annualNet < 0 ? 'text-rose-500' : 'text-slate-400');
                 return `
                     <tr class="border-t border-slate-100">
@@ -1597,6 +1866,7 @@
                             <button onclick="window.openUserDashboard(${person.id})" class="text-left group">
                                 <p class="text-sm font-bold text-slate-800 group-hover:text-violet-600 transition-colors">${escapeHtml(person.name)}</p>
                                 <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Ver detalhes</p>
+                                <p class="text-[10px] font-black mt-2 ${pendingPayments === 0 ? 'text-emerald-600' : 'text-amber-600'}">${pendingPayments === 0 ? 'Sem pendências' : `${pendingPayments} pendente(s)`}</p>
                             </button>
                         </td>
                         <td class="py-4 pr-4 text-right text-sm font-extrabold text-emerald-600">${formatBRL(annualStats.recebe)}</td>
