@@ -9,7 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         
         :root {
-            --bg-main: #fcfdfe;
+            --bg-main: #f1f5f9;
             --card-bg: #ffffff;
             --primary: #4f46e5;
             --secondary: #64748b;
@@ -98,14 +98,11 @@
             border-radius: 10px;
         }
 
-        #subEnabled:checked + .toggle-track .toggle-thumb {
-            transform: translateX(1.25rem);
-        }
     </style>
 </head>
 <body class="pb-12">
 
-    <header class="sticky top-0 z-40 bg-slate-100/95 backdrop-blur-md border-b border-slate-200">
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
             <div class="w-full flex items-center justify-between gap-4">
                 <h1 onclick="switchTab('home')" class="text-2xl md:text-[1.7rem] font-black tracking-tight text-slate-900 cursor-pointer select-none whitespace-nowrap">
@@ -462,7 +459,7 @@
         </section>
     </main>
 
-    <footer class="mt-16 border-t border-slate-200 bg-slate-100/95 backdrop-blur-sm">
+    <footer class="mt-16 border-t border-slate-200 bg-white/95 backdrop-blur-sm">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div>
                 <p class="text-sm font-bold text-slate-800">
@@ -484,59 +481,59 @@
 
     <!-- MODAL ASSINATURA (FORMULÁRIO) -->
     <div id="modalSub" onclick="window.handleBackdropClick(event, 'modalSub')" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter">
-            <div class="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col h-[88vh] max-h-[42rem]">
+            <div class="p-4 sm:p-5 border-b border-slate-200 flex justify-between items-center bg-white">
                 <h2 id="modalSubTitle" class="text-lg font-bold">Nova Assinatura</h2>
-                <button onclick="closeModal('modalSub')" class="text-slate-400 hover:bg-slate-100 p-2 rounded-full transition">✕</button>
+                <button onclick="closeModal('modalSub')" class="w-11 h-11 bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-2xl transition shrink-0 flex items-center justify-center text-lg font-bold shadow-sm">✕</button>
             </div>
-            <form id="formSub" class="p-8 space-y-5">
+            <form id="formSub" class="flex flex-1 min-h-0 flex-col">
                 <input type="hidden" id="editId">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Serviço</label>
-                        <input type="text" id="subName" required class="custom-input" placeholder="Netflix, iCloud...">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Valor Total (R$)</label>
-                        <input type="number" step="0.01" id="subPrice" required class="custom-input">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Data de Início</label>
-                        <input type="date" id="startDate" required class="custom-input">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Prazo (Meses)</label>
-                        <input type="number" id="subDuration" class="custom-input" placeholder="0 = Indeterminado" value="0">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Ciclo</label>
-                        <select id="subCycle" class="custom-input">
-                            <option value="Mensal">Mensal</option>
-                            <option value="Anual">Anual</option>
-                        </select>
-                    </div>
-                    <div class="md:col-span-3">
-                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Quem paga o valor total?</label>
-                        <select id="subPayerId" class="custom-input" required></select>
-                    </div>
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Participantes (Divisão)</label>
-                    <div id="membersChecklist" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto p-3 bg-slate-50 rounded-xl border border-slate-100"></div>
-                </div>
-                <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50">
-                    <div>
-                        <p class="text-xs font-bold text-slate-700 uppercase tracking-widest">Status da Assinatura</p>
-                        <p class="text-xs text-slate-400 mt-1">Assinaturas inativas nao entram nos saldos.</p>
-                    </div>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="subEnabled" class="sr-only peer" checked>
-                        <div class="toggle-track relative w-12 h-7 bg-slate-200 rounded-full peer-checked:bg-violet-500 transition-colors shrink-0">
-                            <span class="toggle-thumb absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ease-out"></span>
+                <div class="flex-1 min-h-0 overflow-y-auto bg-slate-100 p-4 sm:p-5 space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Serviço</label>
+                            <input type="text" id="subName" required class="custom-input" placeholder="Netflix, iCloud...">
                         </div>
-                    </label>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Valor Total (R$)</label>
+                            <input type="number" step="0.01" id="subPrice" required class="custom-input">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Data de Início</label>
+                            <input type="date" id="startDate" required class="custom-input">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Prazo (Meses)</label>
+                            <input type="number" id="subDuration" class="custom-input" placeholder="0 = Indeterminado" value="0">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Ciclo</label>
+                            <select id="subCycle" class="custom-input">
+                                <option value="Mensal">Mensal</option>
+                                <option value="Anual">Anual</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Quem paga o valor total?</label>
+                            <select id="subPayerId" class="custom-input" required></select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Participantes (Divisão)</label>
+                        <div id="membersChecklist" class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto p-3 bg-white rounded-xl border border-slate-200"></div>
+                    </div>
+                    <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-slate-200 bg-white">
+                        <div>
+                            <p class="text-xs font-bold text-slate-700 uppercase tracking-widest">Status da Assinatura</p>
+                            <p class="text-xs text-slate-400 mt-1">Assinaturas inativas nao entram nos saldos.</p>
+                        </div>
+                        <label class="inline-flex items-center gap-2 cursor-pointer text-sm font-semibold text-slate-700">
+                            <input type="checkbox" id="subEnabled" class="h-4 w-4 rounded border-slate-300 text-violet-600 focus:ring-violet-500" checked>
+                            <span>Ativa</span>
+                        </label>
+                    </div>
                 </div>
-                <div class="flex gap-3 pt-4 border-t border-slate-50">
+                <div class="bg-white border-t border-slate-200 flex gap-3 p-2.5 sm:p-3">
                     <button type="button" onclick="closeModal('modalSub')" class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl">Cancelar</button>
                     <button type="submit" class="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100">Salvar Assinatura</button>
                 </div>
@@ -546,10 +543,10 @@
 
     <!-- MODAL DETALHE DA ASSINATURA (ESTILO DASHBOARD) -->
     <div id="modalSubDetail" onclick="window.handleBackdropClick(event, 'modalSubDetail')" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-[60] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-200 flex justify-between items-start bg-slate-100 gap-4">
-                <div class="flex items-center gap-4">
-                    <div id="subDetailIcon" class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-lg shadow-indigo-100">N</div>
+        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col h-[88vh] max-h-[42rem]">
+            <div class="p-4 sm:p-5 border-b border-slate-200 flex justify-between items-start bg-white gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div id="subDetailIcon" class="w-10 h-10 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-100 shrink-0">N</div>
                     <div>
                         <h2 id="subDetailName" class="text-xl font-extrabold text-slate-800">Nome da Assinatura</h2>
                         <div id="subDetailBadges" class="flex gap-2 mt-1"></div>
@@ -558,7 +555,7 @@
                 <button onclick="closeModal('modalSubDetail')" class="w-11 h-11 bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-2xl transition shrink-0 flex items-center justify-center text-lg font-bold shadow-sm" aria-label="Fechar detalhes">✕</button>
             </div>
             
-            <div class="p-8 overflow-y-auto space-y-8 bg-white">
+            <div class="flex-1 min-h-0 overflow-y-auto space-y-6 bg-slate-100 p-4 sm:p-5">
                 <!-- Info Grid -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center">
@@ -601,7 +598,7 @@
                 </div>
             </div>
 
-            <div class="bg-slate-100 border-t border-slate-200 flex items-center justify-between gap-3 p-3">
+            <div class="bg-white border-t border-slate-200 flex items-center justify-between gap-3 p-2.5 sm:p-3">
                 <div class="flex items-center gap-2">
                     <button id="btnDeleteSub" class="w-9 h-9 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition flex items-center justify-center" aria-label="Excluir assinatura">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
@@ -610,7 +607,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
                     </button>
                 </div>
-                <button onclick="closeModal('modalSubDetail')" class="flex-1 p-4 bg-white border border-violet-200 text-center text-sm font-bold text-violet-600 hover:text-violet-700 hover:bg-violet-50 rounded-2xl transition">
+                <button onclick="closeModal('modalSubDetail')" class="flex-1 px-4 py-3 bg-white border border-violet-200 text-center text-sm font-bold text-violet-600 hover:text-violet-700 hover:bg-violet-50 rounded-2xl transition">
                     Fechar Detalhes
                 </button>
             </div>
@@ -619,33 +616,37 @@
 
     <!-- MODAL PESSOA -->
     <div id="modalPerson" onclick="window.handleBackdropClick(event, 'modalPerson')" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden modal-enter">
-            <div class="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col h-[32rem] max-h-[88vh]">
+            <div class="p-4 sm:p-5 border-b border-slate-200 flex justify-between items-center bg-white">
                 <h2 id="modalPersonTitle" class="text-lg font-bold">Registrar Pessoa</h2>
-                <button onclick="closeModal('modalPerson')" class="text-slate-400 hover:bg-slate-100 p-2 rounded-full transition">✕</button>
+                <button onclick="closeModal('modalPerson')" class="w-11 h-11 bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-2xl transition shrink-0 flex items-center justify-center text-lg font-bold shadow-sm">✕</button>
             </div>
-            <form id="formPerson" class="p-8 space-y-5">
+            <form id="formPerson" class="flex flex-1 min-h-0 flex-col">
                 <input type="hidden" id="editPersonId">
-                <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Nome da Pessoa</label>
-                    <input type="text" id="personName" required class="custom-input" placeholder="Ex: João Silva">
+                <div class="flex-1 min-h-0 overflow-y-auto bg-slate-100 p-4 sm:p-5 space-y-5">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Nome da Pessoa</label>
+                        <input type="text" id="personName" required class="custom-input" placeholder="Ex: João Silva">
+                    </div>
                 </div>
-                <button id="personSubmitBtn" type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl">Adicionar</button>
+                <div class="bg-white border-t border-slate-200 p-2.5 sm:p-3">
+                    <button id="personSubmitBtn" type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl">Adicionar</button>
+                </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL DASHBOARD INDIVIDUAL -->
     <div id="modalUserDash" onclick="window.handleBackdropClick(event, 'modalUserDash')" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-[60] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-200 flex justify-between items-start bg-slate-100 gap-4">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden modal-enter flex flex-col h-[88vh] max-h-[42rem]">
+            <div class="p-4 sm:p-5 border-b border-slate-200 flex justify-between items-start bg-white gap-3">
                 <div>
                     <h2 id="userDashName" class="text-xl font-extrabold text-slate-800">Nome do Usuário</h2>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Visão Geral Individual</p>
                 </div>
                 <button onclick="closeModal('modalUserDash')" class="w-11 h-11 bg-white border border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-2xl transition shrink-0 flex items-center justify-center text-lg font-bold shadow-sm" aria-label="Fechar detalhes">✕</button>
             </div>
-            <div class="p-8 overflow-y-auto space-y-8 bg-white">
+            <div class="flex-1 min-h-0 overflow-y-auto space-y-6 bg-slate-100 p-4 sm:p-5">
                 <div id="userDashSummary" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 <div>
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
@@ -662,7 +663,7 @@
                     <div id="userDashMemberList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
                 </div>
             </div>
-            <div class="bg-slate-100 border-t border-slate-200 flex items-center justify-between gap-3 p-3">
+            <div class="bg-white border-t border-slate-200 flex items-center justify-between gap-3 p-2.5 sm:p-3">
                 <div class="flex items-center gap-2">
                     <button id="btnDeletePersonDetail" class="w-9 h-9 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition flex items-center justify-center" aria-label="Excluir pessoa">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
@@ -671,7 +672,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
                     </button>
                 </div>
-                <button onclick="closeModal('modalUserDash')" class="flex-1 p-4 bg-white border border-violet-200 text-center text-sm font-bold text-violet-600 hover:text-violet-700 hover:bg-violet-50 rounded-2xl transition">
+                <button onclick="closeModal('modalUserDash')" class="flex-1 px-4 py-3 bg-white border border-violet-200 text-center text-sm font-bold text-violet-600 hover:text-violet-700 hover:bg-violet-50 rounded-2xl transition">
                     Fechar Detalhes
                 </button>
             </div>
@@ -1303,7 +1304,6 @@
             closeModal('modalPerson');
             render();
         };
-
         $('formSub').onsubmit = (e) => {
             e.preventDefault();
 
