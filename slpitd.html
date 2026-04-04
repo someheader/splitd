@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePay - Gestão de Assinaturas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-main: #fcfdfe;
+            --card-bg: #ffffff;
+            --primary: #4f46e5;
+            --secondary: #64748b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 0.625rem 1rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .custom-input:focus {
+            background-color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .details-content.open {
+            max-height: 500px;
+        }
+
+        .rotate-icon {
+            transition: transform 0.3s;
+        }
+
+        .rotate-icon.open {
+            transform: rotate(180deg);
+        }
+
+        /* Animação suave para modais */
+        .modal-enter {
+            animation: modalFadeIn 0.2s ease-out forwards;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="pb-12">
+
+    <!-- Cabeçalho -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-800">SharePay</h1>
+            </div>
+
+            <nav class="flex gap-8 text-sm font-medium text-slate-500">
+                <button onclick="switchTab('subs')" id="tab-subs" class="py-2 tab-active transition-all">Assinaturas</button>
+                <button onclick="switchTab('people')" id="tab-people" class="py-2 transition-all">Pessoas</button>
+                <button onclick="switchTab('dash')" id="tab-dash" class="py-2 transition-all">Dashboard</button>
+            </nav>
+            
+            <div class="flex gap-2">
+                <button onclick="openPersonModal()" class="text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg font-semibold transition text-slate-700">
+                    + Pessoa
+                </button>
+                <button onclick="openSubModal()" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-semibold transition shadow-md shadow-indigo-100">
+                    + Assinatura
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 pt-8">
+        
+        <!-- SECÇÃO ASSINATURAS -->
+        <section id="view-subs" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="subsGrid"></div>
+            <div id="empty-subs" class="hidden text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-100 mt-4">
+                <p class="text-slate-400">Nenhuma assinatura registrada.</p>
+            </div>
+        </section>
+
+        <!-- SECÇÃO PESSOAS -->
+        <section id="view-people" class="tab-content hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="peopleGrid"></div>
+        </section>
+
+        <!-- SECÇÃO DASHBOARD -->
+        <section id="view-dash" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
+                    <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                        <span class="w-2 h-6 bg-indigo-500 rounded-full"></span>
+                        Fluxo Financeiro Global
+                    </h2>
+                    <div id="dash-summary" class="space-y-4"></div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
+                    <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                        <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
+                        Balanço Individual (Geral)
+                    </h2>
+                    <div id="dash-people" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
+                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-amber-500 rounded-full"></span>
+                    Balanço Mensal (Próximos 12 meses)
+                </h2>
+                <div id="monthly-balance-container" class="space-y-4"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL ASSINATURA -->
+    <div id="modalSub" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden modal-enter">
+            <div class="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+                <h2 id="modalSubTitle" class="text-lg font-bold">Nova Assinatura</h2>
+                <button onclick="closeModal('modalSub')" class="text-slate-400 hover:bg-slate-100 p-2 rounded-full transition">✕</button>
+            </div>
+            <form id="formSub" class="p-8 space-y-5">
+                <input type="hidden" id="editId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Serviço</label>
+                        <input type="text" id="subName" required class="custom-input" placeholder="Netflix, iCloud...">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Valor (R$)</label>
+                        <input type="number" step="0.01" id="subPrice" required class="custom-input">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Mês Renovação</label>
+                        <select id="subMonth" class="custom-input">
+                            <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
+                            <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
+                            <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
+                            <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Ciclo</label>
+                        <select id="subCycle" class="custom-input">
+                            <option value="Mensal">Mensal</option>
+                            <option value="Anual">Anual</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Quem paga?</label>
+                        <select id="subPayerId" class="custom-input" required></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Participantes</label>
+                    <div id="membersChecklist" class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 bg-slate-50 rounded-xl border border-slate-100"></div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeModal('modalSub')" class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl">Cancelar</button>
+                    <button type="submit" class="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PESSOA -->
+    <div id="modalPerson" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden modal-enter">
+            <div class="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+                <h2 class="text-lg font-bold">Registrar Pessoa</h2>
+                <button onclick="closeModal('modalPerson')" class="text-slate-400 hover:bg-slate-100 p-2 rounded-full transition">✕</button>
+            </div>
+            <form id="formPerson" class="p-8 space-y-5">
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Nome da Pessoa</label>
+                    <input type="text" id="personName" required class="custom-input" placeholder="Ex: João Silva">
+                </div>
+                <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl">Adicionar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO (REPLACE PARA CONFIRM/ALERT) -->
+    <div id="modalConfirm" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden modal-enter text-center">
+            <div class="p-8">
+                <div id="confirmIcon" class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                </div>
+                <h2 id="confirmTitle" class="text-lg font-bold text-slate-800 mb-2">Tem certeza?</h2>
+                <p id="confirmText" class="text-sm text-slate-500 leading-relaxed">Esta ação não poderá ser desfeita após a confirmação.</p>
+            </div>
+            <div id="confirmFooter" class="p-4 bg-slate-50 flex gap-2">
+                <button id="confirmCancelBtn" onclick="closeModal('modalConfirm')" class="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-200 rounded-xl transition">Voltar</button>
+                <button id="confirmActionBtn" class="flex-1 py-3 bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-100 transition">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ESTADO GLOBAL
+        let state = {
+            pessoas: [
+                { id: 1, name: "Eu (Pagador)" },
+                { id: 2, name: "Maria" },
+                { id: 3, name: "Carlos" }
+            ],
+            assinaturas: [
+                {
+                    id: 1,
+                    name: "Netflix Premium",
+                    price: 55.90,
+                    month: 0, 
+                    cycle: "Mensal",
+                    payerId: 1,
+                    memberIds: [1, 2, 3],
+                    splitPrice: 18.64
+                }
+            ]
+        };
+
+        const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        // UTILITÁRIOS
+        function ceil2(val) { return Math.ceil(val * 100) / 100; }
+        function formatBRL(val) { return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+
+        window.toggleAccordion = function(id) {
+            const content = document.getElementById(`details-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            if (content && icon) {
+                content.classList.toggle('open');
+                icon.classList.toggle('open');
+            }
+        };
+
+        // UI NAVIGATION
+        window.switchTab = function(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active');
+            render();
+        };
+
+        window.openSubModal = function(editId = null) {
+            const modal = document.getElementById('modalSub');
+            const form = document.getElementById('formSub');
+            document.getElementById('editId').value = editId || '';
+            document.getElementById('modalSubTitle').innerText = editId ? "Editar Assinatura" : "Nova Assinatura";
+            
+            const payerSelect = document.getElementById('subPayerId');
+            payerSelect.innerHTML = state.pessoas.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            
+            document.getElementById('membersChecklist').innerHTML = state.pessoas.map(p => `
+                <label class="flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-200 cursor-pointer">
+                    <input type="checkbox" name="member" value="${p.id}" class="w-4 h-4 text-indigo-600 rounded">
+                    <span class="text-xs font-medium text-slate-600">${p.name}</span>
+                </label>
+            `).join('');
+
+            if (editId) {
+                const sub = state.assinaturas.find(s => s.id === editId);
+                if (sub) {
+                    document.getElementById('subName').value = sub.name;
+                    document.getElementById('subPrice').value = sub.price;
+                    document.getElementById('subMonth').value = sub.month;
+                    document.getElementById('subCycle').value = sub.cycle;
+                    payerSelect.value = sub.payerId;
+
+                    const checkboxes = document.querySelectorAll('input[name="member"]');
+                    checkboxes.forEach(cb => { 
+                        cb.checked = sub.memberIds.includes(parseInt(cb.value));
+                    });
+                }
+            } else {
+                form.reset();
+                const checkboxes = document.querySelectorAll('input[name="member"]');
+                checkboxes.forEach(cb => cb.checked = true); 
+            }
+            modal.classList.remove('hidden');
+        };
+
+        window.openPersonModal = function() { 
+            document.getElementById('formPerson').reset();
+            document.getElementById('modalPerson').classList.remove('hidden'); 
+        };
+        
+        window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+
+        // MODAL DE CONFIRMAÇÃO CUSTOMIZADO
+        window.showConfirm = function(title, text, onConfirm, isAlert = false) {
+            const modal = document.getElementById('modalConfirm');
+            const titleEl = document.getElementById('confirmTitle');
+            const textEl = document.getElementById('confirmText');
+            const actionBtn = document.getElementById('confirmActionBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+            const icon = document.getElementById('confirmIcon');
+
+            titleEl.innerText = title;
+            textEl.innerText = text;
+
+            if (isAlert) {
+                cancelBtn.classList.add('hidden');
+                actionBtn.innerText = "Entendido";
+                actionBtn.className = "flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-100 transition";
+                icon.className = "w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4";
+                icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+            } else {
+                cancelBtn.classList.remove('hidden');
+                actionBtn.innerText = "Excluir";
+                actionBtn.className = "flex-1 py-3 bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-100 transition";
+                icon.className = "w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4";
+                icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+            }
+
+            actionBtn.onclick = () => {
+                onConfirm();
+                closeModal('modalConfirm');
+            };
+
+            modal.classList.remove('hidden');
+        };
+
+        // LOGICA DE DADOS
+        window.deleteSub = function(id) {
+            showConfirm(
+                "Remover Assinatura?", 
+                "Você perderá os dados desta assinatura e os balanços serão recalculados.", 
+                () => {
+                    state.assinaturas = state.assinaturas.filter(s => s.id !== id); 
+                    render(); 
+                }
+            );
+        };
+
+        window.deletePerson = function(id) {
+            const isPayer = state.assinaturas.some(s => s.payerId === id);
+            
+            if (isPayer) {
+                const sub = state.assinaturas.find(s => s.payerId === id);
+                showConfirm(
+                    "Ação Negada", 
+                    `Esta pessoa é a pagadora da assinatura "${sub.name}". Altere o pagador antes de removê-la.`, 
+                    () => {}, 
+                    true
+                );
+                return;
+            }
+
+            showConfirm(
+                "Remover Pessoa?", 
+                "Esta pessoa será retirada de todas as divisões de custos e o valor das assinaturas será recalculado para os outros membros.", 
+                () => {
+                    state.pessoas = state.pessoas.filter(p => p.id !== id);
+                    state.assinaturas = state.assinaturas.map(sub => {
+                        const newMembers = sub.memberIds.filter(mId => mId !== id);
+                        return {
+                            ...sub,
+                            memberIds: newMembers,
+                            splitPrice: newMembers.length > 0 ? ceil2(sub.price / newMembers.length) : sub.price
+                        };
+                    });
+                    render();
+                }
+            );
+        };
+
+        // FORM SUBMISSIONS
+        document.getElementById('formPerson').onsubmit = (e) => {
+            e.preventDefault();
+            const name = document.getElementById('personName').value.trim();
+            if (name) {
+                state.pessoas.push({ id: Date.now(), name: name });
+                closeModal('modalPerson');
+                render();
+            }
+        };
+
+        document.getElementById('formSub').onsubmit = (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('editId').value;
+            const price = parseFloat(document.getElementById('subPrice').value);
+            const memberIds = Array.from(document.querySelectorAll('input[name="member"]:checked')).map(cb => parseInt(cb.value));
+            const payerId = parseInt(document.getElementById('subPayerId').value);
+            
+            if (memberIds.length === 0) {
+                showConfirm("Erro no formulário", "Selecione pelo menos um participante para dividir os custos.", () => {}, true);
+                return;
+            }
+
+            const subData = {
+                id: editId ? parseInt(editId) : Date.now(),
+                name: document.getElementById('subName').value,
+                price: price,
+                month: parseInt(document.getElementById('subMonth').value),
+                cycle: document.getElementById('subCycle').value,
+                payerId: payerId,
+                memberIds: memberIds,
+                splitPrice: ceil2(price / memberIds.length)
+            };
+
+            if (editId) {
+                state.assinaturas = state.assinaturas.map(s => s.id === subData.id ? subData : s);
+            } else {
+                state.assinaturas.push(subData);
+            }
+
+            closeModal('modalSub');
+            render();
+        };
+
+        // RENDERING ENGINE
+        function render() {
+            renderSubs();
+            renderPeople();
+            renderDash();
+        }
+
+        function renderSubs() {
+            const grid = document.getElementById('subsGrid');
+            const emptyState = document.getElementById('empty-subs');
+            
+            if (state.assinaturas.length === 0) {
+                grid.innerHTML = "";
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = state.assinaturas.map(sub => {
+                const payerObj = state.pessoas.find(p => p.id === sub.payerId);
+                const payerName = payerObj ? payerObj.name : 'Ninguém';
+                const membersNames = sub.memberIds.map(mId => {
+                    const p = state.pessoas.find(p => p.id === mId);
+                    return p ? p.name : 'Ex-membro';
+                });
+
+                return `
+                    <div class="bg-white rounded-3xl shadow-soft border border-slate-100 overflow-hidden">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-xl">
+                                    ${sub.name.charAt(0)}
+                                </div>
+                                <div class="flex gap-1">
+                                    <button onclick="openSubModal(${sub.id})" class="p-2 text-slate-300 hover:text-indigo-600 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
+                                    </button>
+                                    <button onclick="window.deleteSub(${sub.id})" class="p-2 text-slate-300 hover:text-red-500 transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-lg">${sub.name}</h3>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-[9px] uppercase font-bold px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">${sub.cycle}</span>
+                                <span class="text-[9px] uppercase font-bold px-2 py-0.5 bg-amber-50 text-amber-600 rounded-full">🗓️ ${meses[sub.month]}</span>
+                            </div>
+                            <div class="mt-6 flex justify-between items-end border-t border-slate-50 pt-4">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total</p>
+                                    <p class="font-bold text-slate-800 text-xl">${formatBRL(sub.price)}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Cota</p>
+                                    <p class="font-bold text-indigo-600">${formatBRL(sub.splitPrice)}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50/50 border-t border-slate-100">
+                            <button onclick="window.toggleAccordion(${sub.id})" class="w-full px-6 py-3 flex items-center justify-between text-xs font-bold text-slate-500 hover:bg-slate-100 transition">
+                                DETALHES DOS PARTICIPANTES
+                                <svg id="icon-${sub.id}" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rotate-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 9l-7 7-7-7" stroke-width="2"/></svg>
+                            </button>
+                            <div id="details-${sub.id}" class="details-content px-6 pb-6 space-y-3">
+                                <div>
+                                    <p class="text-[10px] font-bold text-emerald-600 uppercase mb-1">👑 Pagador Principal</p>
+                                    <p class="text-sm font-semibold text-slate-700">${payerName}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">👥 Divisão (${sub.memberIds.length} pessoas)</p>
+                                    <div class="flex flex-wrap gap-1">
+                                        ${membersNames.map(m => `<span class="px-2 py-1 bg-white border border-slate-200 rounded-md text-[11px] text-slate-600">${m}</span>`).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderPeople() {
+            const grid = document.getElementById('peopleGrid');
+            grid.innerHTML = state.pessoas.map(p => `
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 flex items-center justify-between shadow-sm hover:border-slate-300 transition-all">
+                    <span class="font-bold text-sm text-slate-700">${p.name}</span>
+                    <button onclick="window.deletePerson(${p.id})" class="text-slate-300 hover:text-rose-500 transition-colors p-1" title="Remover pessoa">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderDash() {
+            const summary = document.getElementById('dash-summary');
+            const dashPeople = document.getElementById('dash-people');
+            const monthlyContainer = document.getElementById('monthly-balance-container');
+
+            let totalCirculacao = 0;
+            const balancoGeral = {};
+            state.pessoas.forEach(p => balancoGeral[p.id] = { deve: 0, recebe: 0 });
+
+            state.assinaturas.forEach(sub => {
+                totalCirculacao += sub.price;
+                sub.memberIds.forEach(mId => {
+                    if (mId !== sub.payerId) {
+                        if (balancoGeral[mId]) balancoGeral[mId].deve += sub.splitPrice;
+                        if (balancoGeral[sub.payerId]) balancoGeral[sub.payerId].recebe += sub.splitPrice;
+                    }
+                });
+            });
+
+            const totalColetar = Object.values(balancoGeral).reduce((a, b) => a + b.recebe, 0);
+
+            summary.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-5 bg-indigo-50 rounded-2xl"><p class="text-[10px] font-bold text-indigo-400 uppercase mb-1">Volume Total</p><p class="text-xl font-bold text-indigo-700">${formatBRL(totalCirculacao)}</p></div>
+                    <div class="p-5 bg-emerald-50 rounded-2xl"><p class="text-[10px] font-bold text-emerald-400 uppercase mb-1">Total a Receber</p><p class="text-xl font-bold text-emerald-700">${formatBRL(totalColetar)}</p></div>
+                </div>
+            `;
+
+            dashPeople.innerHTML = state.pessoas.map(p => {
+                const b = balancoGeral[p.id];
+                const liq = b.recebe - b.deve;
+                const statusColor = liq > 0 ? 'text-emerald-600' : (liq < 0 ? 'text-rose-500' : 'text-slate-400');
+                return `
+                    <div class="p-4 border border-slate-100 rounded-2xl flex justify-between items-center">
+                        <div><p class="font-bold text-sm text-slate-800">${p.name}</p></div>
+                        <div class="text-right">
+                            <p class="text-[9px] font-black uppercase ${statusColor}">${liq > 0 ? 'Recebe' : (liq < 0 ? 'Paga' : 'Quitado')}</p>
+                            <p class="font-bold ${statusColor}">${formatBRL(Math.abs(liq))}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            let monthlyHTML = "";
+            const currentMonth = new Date().getMonth();
+            for (let i = 0; i < 12; i++) {
+                const monthIdx = (currentMonth + i) % 12;
+                const balancoMes = {};
+                state.pessoas.forEach(p => balancoMes[p.id] = { deve: 0, recebe: 0 });
+
+                state.assinaturas.forEach(sub => {
+                    let ocorre = (sub.cycle === "Mensal") || (sub.cycle === "Anual" && sub.month === monthIdx);
+                    if (ocorre) {
+                        sub.memberIds.forEach(mId => {
+                            if (mId !== sub.payerId) {
+                                if (balancoMes[mId]) balancoMes[mId].deve += sub.splitPrice;
+                                if (balancoMes[sub.payerId]) balancoMes[sub.payerId].recebe += sub.splitPrice;
+                            }
+                        });
+                    }
+                });
+
+                const totalMes = Object.values(balancoMes).reduce((a, b) => a + b.recebe, 0);
+                monthlyHTML += `
+                    <div class="border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                        <button onclick="window.toggleAccordion('month-${i}')" class="w-full px-6 py-4 flex items-center justify-between bg-slate-50/50 hover:bg-slate-100 transition">
+                            <span class="text-sm font-bold text-slate-700">${meses[monthIdx]}</span>
+                            <span class="text-xs font-bold text-slate-400">TOTAL: ${formatBRL(totalMes)}</span>
+                        </button>
+                        <div id="details-month-${i}" class="details-content bg-white px-6">
+                            <div class="py-4 space-y-2">
+                                ${state.pessoas.map(p => {
+                                    const b = balancoMes[p.id];
+                                    const liq = b.recebe - b.deve;
+                                    if (liq === 0) return '';
+                                    return `
+                                        <div class="flex justify-between text-xs py-2 border-b border-slate-50 last:border-0">
+                                            <span class="font-medium text-slate-600">${p.name}</span>
+                                            <span class="font-bold ${liq > 0 ? 'text-emerald-600' : 'text-rose-500'}">
+                                                ${liq > 0 ? 'Recebe' : 'Paga'} ${formatBRL(Math.abs(liq))}
+                                            </span>
+                                        </div>
+                                    `;
+                                }).join('') || '<p class="text-center text-[10px] text-slate-400 py-2">Sem movimentos</p>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            monthlyContainer.innerHTML = monthlyHTML;
+        }
+
+        window.onload = render;
+    </script>
+</body>
+</html>
