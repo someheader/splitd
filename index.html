@@ -80,6 +80,13 @@
             color: var(--primary);
         }
 
+        .menu-button-active {
+            background-color: #5b21b6;
+            border-color: #5b21b6;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -122,8 +129,8 @@
                     <button onclick="switchTab('people')" id="tab-people" data-tab="people" class="py-2 shrink-0 transition-all">Pessoas</button>
                     <button onclick="switchTab('dash')" id="tab-dash" data-tab="dash" class="py-2 shrink-0 transition-all">Dashboard</button>
                 </nav>
-                <div class="relative md:hidden justify-self-center">
-                    <button onclick="window.toggleHeaderNavMenu()" id="headerNavMenuButton" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 px-3 py-2 border border-slate-200 rounded-2xl hover:bg-slate-50 transition" aria-label="Abrir menu de navegação">
+                <div class="relative md:hidden justify-self-center flex justify-center">
+                    <button onclick="window.toggleHeaderNavMenu()" id="headerNavMenuButton" class="inline-flex items-center justify-center gap-2 text-sm font-semibold text-slate-600 px-3 py-2 min-w-[9rem] border border-slate-200 rounded-2xl hover:bg-slate-50 transition" aria-label="Abrir menu de navegação">
                         <span id="headerNavCurrent">Home</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 9l6 6 6-6" />
@@ -138,7 +145,7 @@
                 </div>
                 <input type="file" id="jsonFileInput" accept="application/json,.json" class="hidden">
                 <div class="relative justify-self-end">
-                    <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="text-slate-500 hover:text-slate-700 p-2 flex items-center justify-center rounded-2xl transition shrink-0" aria-label="Abrir menu de opções">
+                    <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="text-slate-500 hover:text-slate-700 px-3 py-2 flex items-center justify-center rounded-2xl border border-slate-200 transition shrink-0 bg-white" aria-label="Abrir menu de opções">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
@@ -1062,12 +1069,23 @@
         window.handleBackdropClick = function(event, modalId) {
             if (event.target === $(modalId)) closeModal(modalId);
         };
+        function syncMenuButtonStates() {
+            const buttonPairs = [
+                { menu: $('settingsMenu'), button: $('settingsMenuButton') },
+                { menu: $('headerNavMenu'), button: $('headerNavMenuButton') }
+            ];
+            buttonPairs.forEach(({ menu, button }) => {
+                if (!menu || !button) return;
+                button.classList.toggle('menu-button-active', menu.classList.contains('open'));
+            });
+        }
         window.toggleMenu = function(menuId) {
             const targetMenu = $(menuId);
             document.querySelectorAll('.menu-panel').forEach(menu => {
                 if (menu.id !== menuId) menu.classList.remove('open');
             });
             targetMenu.classList.toggle('open');
+            syncMenuButtonStates();
         };
         window.toggleSettingsMenu = function() {
             toggleMenu('settingsMenu');
@@ -1080,6 +1098,7 @@
         };
         window.closeAllMenus = function() {
             document.querySelectorAll('.menu-panel').forEach(menu => menu.classList.remove('open'));
+            syncMenuButtonStates();
         };
         function updateHeaderActions(activeTab) {}
         window.triggerImportJson = function() {
