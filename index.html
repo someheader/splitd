@@ -113,6 +113,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
+                        <span id="settingsUnsavedDot" class="hidden absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-violet-500 ring-2 ring-white"></span>
                     </button>
                     <div id="settingsMenu" class="menu-panel absolute right-0 top-12 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/60 p-2 z-50">
                         <button onclick="window.triggerImportJson()" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">
@@ -121,6 +122,9 @@
                         <button onclick="window.exportJson()" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">
                             Exportar JSON
                         </button>
+                        <p id="settingsExportHint" class="hidden px-3 pb-2 text-[10px] font-bold uppercase tracking-widest text-violet-500">
+                            Alteracoes pendentes
+                        </p>
                         <button onclick="window.resetAllData()" class="w-full text-left text-xs font-semibold text-rose-500 hover:bg-rose-50 rounded-xl px-3 py-2 transition">
                             Remover Tudo
                         </button>
@@ -142,6 +146,15 @@
     </header>
 
     <main class="max-w-5xl mx-auto px-6 pt-8">
+        <div id="exportReminder" class="hidden mb-6 rounded-2xl border border-violet-100 bg-violet-50 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+                <p class="text-xs font-black uppercase tracking-[0.18em] text-violet-500">Lembrete de Backup</p>
+                <p id="exportReminderText" class="text-sm text-slate-600 mt-1">Voce tem alteracoes ainda nao exportadas.</p>
+            </div>
+            <button onclick="window.exportJson()" class="px-4 py-2 bg-violet-500 hover:bg-violet-600 text-white text-xs font-bold rounded-xl transition shadow-md shadow-violet-100">
+                Exportar Agora
+            </button>
+        </div>
 
         <section id="view-home" class="tab-content space-y-8">
             <div class="relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-soft">
@@ -258,31 +271,66 @@
         </section>
 
         <section id="view-dash" class="tab-content hidden space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
-                    <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
-                        <span class="w-2 h-6 bg-indigo-500 rounded-full"></span>
-                        Resumo Mensal Global
-                    </h2>
-                    <div id="dash-summary" class="space-y-4"></div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="switchDashView('overview')" id="dash-nav-overview" class="px-4 py-2 text-xs font-bold rounded-full bg-slate-900 text-white transition">
+                    Geral
+                </button>
+                <button onclick="switchDashView('statements')" id="dash-nav-statements" class="px-4 py-2 text-xs font-bold rounded-full bg-white text-slate-500 border border-slate-200 transition">
+                    Extratos
+                </button>
+            </div>
+
+            <div id="dash-view-overview" class="dash-subview space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
+                        <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                            <span class="w-2 h-6 bg-indigo-500 rounded-full"></span>
+                            Resumo Global
+                        </h2>
+                        <div id="dash-summary" class="space-y-4"></div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
+                        <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                            <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
+                            Balanço Individual
+                        </h2>
+                        <p class="text-xs text-slate-400 mb-4 font-medium italic">Clique em uma pessoa para ver detalhes</p>
+                        <div id="dash-people" class="space-y-3"></div>
+                    </div>
                 </div>
 
                 <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
                     <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
-                        <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
-                        Balanço Individual
+                        <span class="w-2 h-6 bg-amber-500 rounded-full"></span>
+                        Cronograma e Detalhes Mensais
                     </h2>
-                    <p class="text-xs text-slate-400 mb-4 font-medium italic">Clique em uma pessoa para ver detalhes</p>
-                    <div id="dash-people" class="space-y-3"></div>
+                    <div id="monthly-balance-container" class="space-y-4"></div>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
-                <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
-                    <span class="w-2 h-6 bg-amber-500 rounded-full"></span>
-                    Cronograma e Detalhes Mensais
-                </h2>
-                <div id="monthly-balance-container" class="space-y-4"></div>
+            <div id="dash-view-statements" class="dash-subview hidden">
+                <div class="bg-white p-8 rounded-3xl shadow-soft border border-slate-100">
+                    <h2 class="text-lg font-bold mb-2 flex items-center gap-2">
+                        <span class="w-2 h-6 bg-violet-500 rounded-full"></span>
+                        Extratos Anuais
+                    </h2>
+                    <p class="text-xs text-slate-400 mb-6 font-medium italic">Resumo anual por pessoa com total a receber e total a pagar.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[620px] border-separate border-spacing-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-left text-[10px] uppercase tracking-widest text-slate-400 font-black pb-3">Pessoa</th>
+                                    <th class="text-right text-[10px] uppercase tracking-widest text-slate-400 font-black pb-3">Receber / Ano</th>
+                                    <th class="text-right text-[10px] uppercase tracking-widest text-slate-400 font-black pb-3">Pagar / Ano</th>
+                                    <th class="text-right text-[10px] uppercase tracking-widest text-slate-400 font-black pb-3">Saldo / Ano</th>
+                                    <th class="text-right text-[10px] uppercase tracking-widest text-slate-400 font-black pb-3">Assinaturas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-statements-body"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -498,7 +546,9 @@
 
     <script>
         // ESTADO GLOBAL
-        let state = {
+        const STORAGE_KEY = 'splitdzb_state_v2';
+        const META_KEY = 'splitdzb_meta_v2';
+        const defaultState = {
             pessoas: [
                 { id: 1, name: "Eu (Pagador)" },
                 { id: 2, name: "Maria" },
@@ -527,6 +577,13 @@
                 }
             ]
         };
+        let state = JSON.parse(JSON.stringify(defaultState));
+        let exportMeta = {
+            lastModifiedAt: null,
+            lastExportAt: null,
+            hasUnexportedChanges: false
+        };
+        let dashView = 'overview';
 
         const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
@@ -584,6 +641,90 @@
         }
         function normalizeState() {
             state.assinaturas = state.assinaturas.map(normalizeSubscription);
+        }
+        function formatDateTime(value) {
+            if (!value) return '';
+            return new Date(value).toLocaleString('pt-BR');
+        }
+        function saveMeta() {
+            try {
+                localStorage.setItem(META_KEY, JSON.stringify(exportMeta));
+            } catch (error) {
+                console.warn('Nao foi possivel salvar os metadados locais.', error);
+            }
+        }
+        function loadMeta() {
+            try {
+                const raw = localStorage.getItem(META_KEY);
+                if (!raw) return;
+                const parsed = JSON.parse(raw);
+                exportMeta = {
+                    lastModifiedAt: parsed.lastModifiedAt || null,
+                    lastExportAt: parsed.lastExportAt || null,
+                    hasUnexportedChanges: Boolean(parsed.hasUnexportedChanges)
+                };
+            } catch (error) {
+                console.warn('Nao foi possivel carregar os metadados locais.', error);
+            }
+        }
+        function clearMeta() {
+            exportMeta = {
+                lastModifiedAt: null,
+                lastExportAt: null,
+                hasUnexportedChanges: false
+            };
+            try {
+                localStorage.removeItem(META_KEY);
+            } catch (error) {
+                console.warn('Nao foi possivel limpar os metadados locais.', error);
+            }
+        }
+        function updateExportSuggestionUI() {
+            const hasChanges = exportMeta.hasUnexportedChanges;
+            $('settingsUnsavedDot').classList.toggle('hidden', !hasChanges);
+            $('settingsExportHint').classList.toggle('hidden', !hasChanges);
+            $('exportReminder').classList.toggle('hidden', !hasChanges);
+            $('exportReminderText').innerText = hasChanges
+                ? `Voce tem alteracoes ainda nao exportadas${exportMeta.lastModifiedAt ? ` desde ${formatDateTime(exportMeta.lastModifiedAt)}` : ''}.`
+                : 'Todos os dados atuais ja foram exportados.';
+        }
+        function markStateAsChanged() {
+            exportMeta.lastModifiedAt = new Date().toISOString();
+            exportMeta.hasUnexportedChanges = true;
+            saveMeta();
+            updateExportSuggestionUI();
+        }
+        function markStateAsExported() {
+            exportMeta.lastExportAt = new Date().toISOString();
+            exportMeta.hasUnexportedChanges = false;
+            saveMeta();
+            updateExportSuggestionUI();
+        }
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(getExportPayload().data));
+            } catch (error) {
+                console.warn('Nao foi possivel salvar os dados localmente.', error);
+            }
+        }
+        function loadSavedState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return false;
+                const parsed = JSON.parse(raw);
+                applyImportedState(parsed);
+                return true;
+            } catch (error) {
+                console.warn('Nao foi possivel carregar os dados salvos.', error);
+                return false;
+            }
+        }
+        function clearSavedState() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch (error) {
+                console.warn('Nao foi possivel limpar os dados salvos.', error);
+            }
         }
         function getExportPayload() {
             return {
@@ -701,6 +842,13 @@
             const content = $(`details-${id}`);
             if (content) content.classList.toggle('open');
         };
+        window.switchDashView = function(view) {
+            dashView = view;
+            document.querySelectorAll('.dash-subview').forEach(section => section.classList.add('hidden'));
+            $('dash-view-' + view).classList.remove('hidden');
+            $('dash-nav-overview').className = `px-4 py-2 text-xs font-bold rounded-full transition ${view === 'overview' ? 'bg-slate-900 text-white' : 'bg-white text-slate-500 border border-slate-200'}`;
+            $('dash-nav-statements').className = `px-4 py-2 text-xs font-bold rounded-full transition ${view === 'statements' ? 'bg-slate-900 text-white' : 'bg-white text-slate-500 border border-slate-200'}`;
+        };
         window.handleBackdropClick = function(event, modalId) {
             if (event.target === $(modalId)) closeModal(modalId);
         };
@@ -736,11 +884,15 @@
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(link.href);
+            markStateAsExported();
         };
         window.resetAllData = function() {
             closeAllMenus();
             showConfirm("Remover todos os dados?", "Isso apagará todas as pessoas e assinaturas cadastradas, reiniciando o site do zero.", () => {
                 state = { pessoas: [], assinaturas: [] };
+                clearSavedState();
+                clearMeta();
+                updateExportSuggestionUI();
                 switchTab('home');
             });
         };
@@ -938,6 +1090,7 @@
         window.deleteSub = function(id) {
             showConfirm("Excluir assinatura?", "Isso removerá a assinatura e todos os cálculos associados.", () => {
                 state.assinaturas = state.assinaturas.filter(sub => sub.id !== id);
+                markStateAsChanged();
                 render();
             });
         };
@@ -952,6 +1105,7 @@
             showConfirm("Excluir pessoa?", "Ela será removida de todas as divisões.", () => {
                 state.pessoas = state.pessoas.filter(person => person.id !== id);
                 normalizeState();
+                markStateAsChanged();
                 render();
             });
         };
@@ -966,6 +1120,7 @@
             } else {
                 state.pessoas.push({ id: Date.now(), name });
             }
+            markStateAsChanged();
             closeModal('modalPerson');
             render();
         };
@@ -1001,6 +1156,7 @@
                 state.assinaturas.push(subData);
             }
 
+            markStateAsChanged();
             closeModal('modalSub');
             render();
         };
@@ -1011,6 +1167,7 @@
                 const content = await file.text();
                 const payload = JSON.parse(content);
                 applyImportedState(payload);
+                markStateAsChanged();
                 render();
                 showConfirm("Importação concluída", "Os dados do arquivo JSON foram carregados com sucesso.", () => {}, true);
             } catch (error) {
@@ -1035,6 +1192,7 @@
         // RENDERING
         function render() {
             normalizeState();
+            saveState();
             renderSubs();
             renderPeople();
             renderDash();
@@ -1130,15 +1288,41 @@
             const summary = $('dash-summary');
             const dashPeople = $('dash-people');
             const monthlyContainer = $('monthly-balance-container');
+            const statementsBody = $('dash-statements-body');
             const avgMonthly = state.assinaturas.reduce((total, sub) => {
                 return total + (sub.cycle === "Mensal" ? sub.price : sub.price / 12);
             }, 0);
+            const annualTotal = avgMonthly * 12;
 
-            summary.innerHTML = `<div class="p-6 bg-indigo-50 rounded-2xl border border-indigo-100"><p class="text-[10px] font-bold text-indigo-400 uppercase mb-1 tracking-widest">Custo Médio Total (Mês)</p><p class="text-2xl font-black text-indigo-700">${formatBRL(avgMonthly)}</p><p class="text-[10px] text-indigo-400 mt-2 italic">* Considera valor total das assinaturas.</p></div>`;
+            summary.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-6 bg-indigo-50 rounded-2xl border border-indigo-100">
+                        <p class="text-[10px] font-bold text-indigo-400 uppercase mb-1 tracking-widest">Custo Medio Total (Mes)</p>
+                        <p class="text-2xl font-black text-indigo-700">${formatBRL(avgMonthly)}</p>
+                        <p class="text-[10px] text-indigo-400 mt-2 italic">* Considera valor total das assinaturas.</p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Resumo Anual</p>
+                        <p class="text-2xl font-black text-slate-800">${formatBRL(annualTotal)}</p>
+                        <p class="text-[10px] text-slate-400 mt-2 italic">Estimativa baseada no custo medio mensal atual.</p>
+                    </div>
+                </div>
+            `;
 
             const now = new Date();
             const currentSubs = getActiveSubsForMonth(now.getMonth(), now.getFullYear());
             const currentBalance = buildBalances(currentSubs, peopleMap);
+            const annualBalance = state.pessoas.reduce((acc, person) => {
+                acc[person.id] = { recebe: 0, deve: 0 };
+                return acc;
+            }, {});
+            for (let month = 0; month < 12; month++) {
+                const monthBalance = buildBalances(getActiveSubsForMonth(month, now.getFullYear()), peopleMap);
+                state.pessoas.forEach(person => {
+                    annualBalance[person.id].recebe += monthBalance[person.id].recebe;
+                    annualBalance[person.id].deve += monthBalance[person.id].deve;
+                });
+            }
 
             dashPeople.innerHTML = state.pessoas.map(person => {
                 const stats = currentBalance[person.id];
@@ -1167,12 +1351,41 @@
             }
 
             monthlyContainer.innerHTML = monthlyHTML;
+            statementsBody.innerHTML = state.pessoas.map(person => {
+                const annualStats = annualBalance[person.id];
+                const annualNet = annualStats.recebe - annualStats.deve;
+                const relatedSubs = state.assinaturas.filter(sub => sub.memberIds.includes(person.id) || sub.payerId === person.id).length;
+                const netColor = annualNet > 0 ? 'text-emerald-600' : (annualNet < 0 ? 'text-rose-500' : 'text-slate-400');
+                return `
+                    <tr class="border-t border-slate-100">
+                        <td class="py-4 pr-4">
+                            <button onclick="window.openUserDashboard(${person.id})" class="text-left group">
+                                <p class="text-sm font-bold text-slate-800 group-hover:text-violet-600 transition-colors">${escapeHtml(person.name)}</p>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-1">Ver detalhes</p>
+                            </button>
+                        </td>
+                        <td class="py-4 pr-4 text-right text-sm font-extrabold text-emerald-600">${formatBRL(annualStats.recebe)}</td>
+                        <td class="py-4 pr-4 text-right text-sm font-extrabold text-rose-500">${formatBRL(annualStats.deve)}</td>
+                        <td class="py-4 pr-4 text-right text-sm font-extrabold ${netColor}">${formatBRL(Math.abs(annualNet))}</td>
+                        <td class="py-4 text-right text-sm font-bold text-slate-500">${relatedSubs}</td>
+                    </tr>
+                `;
+            }).join('');
+            switchDashView(dashView);
         }
 
         window.onload = function() {
             updateHeaderActions('home');
+            loadMeta();
+            loadSavedState();
+            updateExportSuggestionUI();
             render();
         };
+        window.addEventListener('beforeunload', (event) => {
+            if (!exportMeta.hasUnexportedChanges) return;
+            event.preventDefault();
+            event.returnValue = '';
+        });
     </script>
 </body>
 </html>
