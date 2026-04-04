@@ -1,12 +1,26 @@
-# Splitdz B
+# PartNest B
 
 Aplicação web estática para controle de assinaturas compartilhadas, divisão de custos entre pessoas e visualização de balanços mensais.
 
 O projeto foi construído em HTML, CSS e JavaScript puro, com interface baseada em Tailwind via CDN. Não exige backend nem banco de dados para funcionar.
 
+## Nota Sobre o Nome
+
+O projeto anteriormente utilizava o nome `Splitdz B`. Esse nome foi substituído por `PartNest B` porque a nomenclatura anterior já era usada em outro contexto comercial.
+
+`PartNest B` é um nome adotado apenas como identidade deste projeto, de forma alusiva e sem finalidade comercial.
+
+## Nota Sobre a Ideia do Projeto
+
+A ideia do projeto veio da necessidade de ter um controle facil de administrar sem precisar vender a alma e entregar todos os dados para um aplicativo que voce vai usar 2 vezes no ano e depois correr o risco de ver tudo vazado aleatoriamente em algum ataque.
+
+Neste modelo em HTML, os dados ficam com voce. Nao existe troca de dados com a nuvem, nem dependencia de um servico externo para o funcionamento basico da ferramenta.
+
+Ao mesmo tempo, isso traz um custo: pode ser mais dificil administrar os dados, porque tudo fica salvo localmente em JSON, `localStorage` e mecanismos locais do navegador, em vez de existir uma infraestrutura remota cuidando disso para voce.
+
 ## Visão Geral
 
-O Splitdz B ajuda a:
+O PartNest B ajuda a:
 
 - cadastrar pessoas participantes
 - registrar assinaturas com valor, ciclo, pagador e membros
@@ -36,7 +50,8 @@ Página inicial com uma apresentação breve da proposta do sistema.
 
 ### Dashboard
 
-- resumo mensal global
+- resumo global
+- extratos anuais por pessoa
 - balanço individual por pessoa
 - cronograma mensal com detalhes expansíveis
 - acesso direto aos modais de pessoa e assinatura a partir dos cards
@@ -91,7 +106,8 @@ Os dados são mantidos em memória no navegador e podem ser exportados em JSON. 
 ## Observações Técnicas
 
 - O projeto usa `Tailwind CSS` por CDN.
-- Os dados não persistem automaticamente entre sessões, a menos que sejam exportados e importados manualmente.
+- Os dados persistem localmente no navegador com `localStorage`.
+- O export em JSON continua sendo recomendado como backup manual das alterações.
 - O sistema normaliza os dados importados para manter consistência entre pagador, participantes e cálculos.
 
 ## Próximos Passos Sugeridos

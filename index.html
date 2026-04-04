@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Splitdz B - Gestão de Assinaturas</title>
+    <title>PartNest B - Gestão de Assinaturas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -105,7 +105,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
             <div class="w-full flex items-center justify-between gap-4">
                 <h1 onclick="switchTab('home')" class="text-2xl md:text-[1.7rem] font-black tracking-tight text-slate-900 cursor-pointer select-none whitespace-nowrap">
-                    Splitdz <span class="text-violet-500 italic font-extrabold">B</span>
+                    PartNest <span class="text-violet-500 italic font-extrabold">B</span>
                 </h1>
                 <input type="file" id="jsonFileInput" accept="application/json,.json" class="hidden">
                 <div class="relative">
@@ -116,6 +116,9 @@
                         <span id="settingsUnsavedDot" class="hidden absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-violet-500 ring-2 ring-white"></span>
                     </button>
                     <div id="settingsMenu" class="menu-panel absolute right-0 top-12 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/60 p-2 z-50">
+                        <button onclick="window.switchTab('about'); window.closeAllMenus();" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">
+                            Sobre
+                        </button>
                         <button onclick="window.triggerImportJson()" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">
                             Importar JSON
                         </button>
@@ -157,42 +160,86 @@
         </div>
 
         <section id="view-home" class="tab-content space-y-8">
-            <div class="relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-soft">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(139,92,246,0.14),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(79,70,229,0.12),_transparent_24%)]"></div>
-                <div class="relative px-6 py-10 md:px-12 md:py-14">
-                    <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-8 items-center">
+            <div class="relative overflow-hidden rounded-[2rem] bg-slate-950 text-white shadow-soft">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(167,139,250,0.28),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.18),_transparent_28%)]"></div>
+                <div class="relative px-6 py-12 md:px-12 md:py-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
                         <div>
-                            <p class="text-[11px] font-black uppercase tracking-[0.28em] text-violet-500 mb-4">Split Shared Payments Better</p>
-                            <h2 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 max-w-3xl leading-[1.02]">
-                                Controle assinaturas compartilhadas sem planilhas confusas ou contas perdidas.
+                            <p class="text-[11px] font-black uppercase tracking-[0.32em] text-violet-300 mb-5">Subscription Cost Intelligence</p>
+                            <h2 class="text-4xl md:text-6xl font-black tracking-tight leading-[0.96] max-w-4xl">
+                                A maneira elegante de organizar assinaturas compartilhadas.
                             </h2>
-                            <p class="mt-5 max-w-2xl text-sm md:text-base text-slate-500 leading-relaxed">
-                                O Splitdz B foi pensado para quem divide streaming, apps e serviços com outras pessoas e precisa enxergar rapidamente quem participa, quem paga e qual o saldo de cada mês.
+                            <p class="mt-6 max-w-2xl text-sm md:text-base text-slate-300 leading-relaxed">
+                                O PartNest B centraliza participantes, serviços, saldos e cronogramas em uma experiência clara, visual e pronta para acompanhar a rotina de quem divide custos todos os meses.
                             </p>
                             <div class="mt-8 flex flex-wrap gap-3">
-                                <button onclick="switchTab('subs')" class="px-5 py-3 bg-violet-500 hover:bg-violet-600 text-white text-sm font-bold rounded-2xl transition shadow-lg shadow-violet-100">
-                                    Começar pelas Assinaturas
+                                <button onclick="switchTab('subs')" class="px-5 py-3 bg-violet-500 hover:bg-violet-400 text-white text-sm font-bold rounded-2xl transition shadow-lg shadow-violet-500/20">
+                                    Comecar Agora
                                 </button>
-                                <button onclick="switchTab('dash')" class="px-5 py-3 bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold rounded-2xl border border-slate-200 transition">
-                                    Ver Dashboard
+                                <button onclick="switchTab('dash')" class="px-5 py-3 bg-white/10 hover:bg-white/15 text-white text-sm font-bold rounded-2xl transition border border-white/15">
+                                    Ver Demonstracao
                                 </button>
                             </div>
+                            <dl class="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl">
+                                <div>
+                                    <dt class="text-[10px] uppercase tracking-[0.24em] text-slate-400 font-black">Controle</dt>
+                                    <dd class="mt-2 text-2xl font-black">360°</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-[10px] uppercase tracking-[0.24em] text-slate-400 font-black">Saldo</dt>
+                                    <dd class="mt-2 text-2xl font-black">Mensal</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-[10px] uppercase tracking-[0.24em] text-slate-400 font-black">Backup</dt>
+                                    <dd class="mt-2 text-2xl font-black">JSON</dd>
+                                </div>
+                            </dl>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="col-span-2 bg-slate-900 text-white rounded-3xl p-5">
-                                <p class="text-[10px] uppercase tracking-[0.22em] text-slate-400 font-black">Visibilidade</p>
-                                <p class="mt-2 text-2xl font-black">Tudo em um só lugar</p>
-                                <p class="mt-2 text-sm text-slate-300 leading-relaxed">Assinaturas, participantes e balanços organizados em uma interface só.</p>
-                            </div>
-                            <div class="bg-white rounded-3xl p-5 border border-slate-200">
-                                <p class="text-[10px] uppercase tracking-[0.22em] text-emerald-500 font-black">Receber</p>
-                                <p class="mt-2 text-xl font-black text-slate-900">Por pessoa</p>
-                                <p class="mt-1 text-xs text-slate-500">Entenda rapidamente quem deve para quem.</p>
-                            </div>
-                            <div class="bg-violet-50 rounded-3xl p-5 border border-violet-100">
-                                <p class="text-[10px] uppercase tracking-[0.22em] text-violet-500 font-black">Planejamento</p>
-                                <p class="mt-2 text-xl font-black text-slate-900">Por mês</p>
-                                <p class="mt-1 text-xs text-slate-500">Acompanhe o cronograma e os detalhes futuros.</p>
+                        <div class="relative">
+                            <div class="absolute -inset-3 rounded-[2rem] bg-violet-500/10 blur-2xl"></div>
+                            <div class="relative rounded-[2rem] border border-white/10 bg-white/95 text-slate-900 p-5 shadow-2xl">
+                                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                                    <div>
+                                        <p class="text-[10px] uppercase tracking-[0.22em] text-violet-500 font-black">Preview</p>
+                                        <p class="mt-2 text-lg font-black">Painel de assinaturas</p>
+                                    </div>
+                                    <div class="flex gap-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-300"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-amber-300"></span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-300"></span>
+                                    </div>
+                                </div>
+                                <div class="mt-5 space-y-3">
+                                    <div class="rounded-2xl border border-slate-100 bg-violet-50 p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-3 min-w-0">
+                                                <div class="w-9 h-9 rounded-xl bg-violet-500 text-white flex items-center justify-center font-black">N</div>
+                                                <div class="min-w-0">
+                                                    <p class="text-sm font-black truncate">Netflix Premium</p>
+                                                    <p class="text-[10px] uppercase tracking-widest text-slate-400 font-black mt-1">Mensal</p>
+                                                </div>
+                                            </div>
+                                            <span class="text-[10px] uppercase font-black px-2 py-1 rounded-full bg-emerald-50 text-emerald-600">Ativa</span>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="rounded-2xl border border-slate-100 p-4">
+                                            <p class="text-[10px] uppercase tracking-widest text-slate-400 font-black">Custo Medio</p>
+                                            <p class="mt-2 text-xl font-black text-indigo-700">R$ 84,70</p>
+                                        </div>
+                                        <div class="rounded-2xl border border-slate-100 p-4">
+                                            <p class="text-[10px] uppercase tracking-widest text-slate-400 font-black">Resumo Anual</p>
+                                            <p class="mt-2 text-xl font-black text-slate-900">R$ 1.016,40</p>
+                                        </div>
+                                    </div>
+                                    <div class="rounded-2xl border border-slate-100 p-4">
+                                        <p class="text-[10px] uppercase tracking-widest text-slate-400 font-black">Balanço Individual</p>
+                                        <div class="mt-3 space-y-2">
+                                            <div class="flex justify-between text-sm"><span class="font-bold text-slate-700">Maria</span><span class="font-black text-rose-500">R$ 17,45</span></div>
+                                            <div class="flex justify-between text-sm"><span class="font-bold text-slate-700">Carlos</span><span class="font-black text-emerald-600">R$ 18,64</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -201,49 +248,125 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
-                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-violet-500 mb-3">1. Cadastre</p>
-                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Monte sua base</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.22em] text-violet-500 mb-3">Cadastro</p>
+                    <h3 class="text-xl font-black text-slate-900 mb-2">Registre tudo em minutos</h3>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Registre pessoas, serviços, valores, ciclos de cobrança e membros participantes de cada divisão.
+                        Adicione pessoas, valores, ciclos, pagadores e participantes sem depender de planilhas ou anotações espalhadas.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
-                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-violet-500 mb-3">2. Entenda</p>
-                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Veja saldos reais</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.22em] text-violet-500 mb-3">Leitura</p>
+                    <h3 class="text-xl font-black text-slate-900 mb-2">Veja quem paga e quem recebe</h3>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Descubra total a pagar, total a receber e a participação individual de cada pessoa sem cálculos manuais.
+                        Acompanhe saldos por pessoa, identifique cobranças pendentes e entenda rapidamente o equilibrio do grupo.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
-                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-violet-500 mb-3">3. Acompanhe</p>
-                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Planeje o mês</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.22em] text-violet-500 mb-3">Planejamento</p>
+                    <h3 class="text-xl font-black text-slate-900 mb-2">Projeções mensais e anuais</h3>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Use o dashboard para acompanhar assinaturas ativas, cronograma futuro e detalhes de cada período.
+                        Use o dashboard para antecipar compromissos, organizar repasses e exportar tudo quando precisar de backup.
                     </p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6">
-                <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-soft">
-                    <p class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-3">Para quem é</p>
-                    <h3 class="text-2xl font-black text-slate-900 mb-3">Ideal para casas, casais, amigos e equipes pequenas</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">
-                        Sempre que várias pessoas dividem um mesmo serviço, o Splitdz B reduz atrito, evita esquecimentos e deixa a cobrança transparente.
-                    </p>
+            <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6">
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-soft p-8">
+                    <p class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-3">Como funciona</p>
+                    <div class="space-y-5">
+                        <div class="flex gap-4">
+                            <div class="w-9 h-9 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center font-black shrink-0">1</div>
+                            <div>
+                                <h3 class="text-base font-black text-slate-900">Monte sua base de pessoas</h3>
+                                <p class="text-sm text-slate-500 mt-1">Cadastre quem participa das divisões e mantenha tudo pronto para novos serviços.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-9 h-9 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center font-black shrink-0">2</div>
+                            <div>
+                                <h3 class="text-base font-black text-slate-900">Crie as assinaturas compartilhadas</h3>
+                                <p class="text-sm text-slate-500 mt-1">Defina valor, ciclo, prazo, pagador e membros para cada assinatura.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-9 h-9 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center font-black shrink-0">3</div>
+                            <div>
+                                <h3 class="text-base font-black text-slate-900">Use o dashboard como extrato vivo</h3>
+                                <p class="text-sm text-slate-500 mt-1">Leia saldos, cronogramas e extratos anuais para tomar decisões com mais clareza.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-gradient-to-r from-violet-500 to-indigo-600 p-7 rounded-3xl text-white shadow-soft">
+                <div class="bg-gradient-to-br from-violet-500 to-indigo-600 rounded-3xl shadow-soft p-8 text-white">
                     <p class="text-[11px] font-black uppercase tracking-[0.22em] text-violet-100 mb-3">Pronto para usar</p>
-                    <h3 class="text-2xl font-black mb-3">Comece cadastrando quem participa e quais assinaturas estão sendo divididas.</h3>
-                    <p class="text-sm text-violet-100 leading-relaxed mb-5">
-                        Em poucos passos você já consegue visualizar os saldos e exportar tudo em JSON para manter um backup do seu controle.
+                    <h3 class="text-3xl font-black leading-tight">Comece hoje e mantenha o controle mesmo depois de recarregar a pagina.</h3>
+                    <p class="mt-4 text-sm text-violet-100 leading-relaxed">
+                        O projeto ja salva os dados localmente no navegador e ainda permite exportar um arquivo JSON para backup manual sempre que necessario.
                     </p>
-                    <div class="flex flex-wrap gap-3">
+                    <div class="mt-8 flex flex-wrap gap-3">
                         <button onclick="switchTab('people')" class="px-4 py-2.5 bg-white text-violet-600 text-sm font-bold rounded-2xl hover:bg-violet-50 transition">
                             Adicionar Pessoas
                         </button>
-                        <button onclick="switchTab('subs')" class="px-4 py-2.5 bg-violet-400/30 text-white text-sm font-bold rounded-2xl hover:bg-violet-400/40 transition border border-violet-300/30">
+                        <button onclick="switchTab('subs')" class="px-4 py-2.5 bg-violet-400/25 text-white text-sm font-bold rounded-2xl hover:bg-violet-400/35 transition border border-violet-300/30">
                             Criar Assinatura
                         </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-about" class="tab-content hidden space-y-8">
+            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-soft overflow-hidden">
+                <div class="px-6 py-10 md:px-10 md:py-12 bg-gradient-to-br from-slate-50 via-white to-violet-50">
+                    <p class="text-[11px] font-black uppercase tracking-[0.28em] text-violet-500 mb-4">Sobre o Projeto</p>
+                    <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 max-w-3xl">
+                        PartNest B existe para oferecer um controle local, simples e legível de assinaturas compartilhadas.
+                    </h2>
+                    <p class="mt-5 max-w-3xl text-sm md:text-base text-slate-500 leading-relaxed">
+                        A proposta do projeto é permitir que você organize pessoas, serviços, saldos e cronogramas sem depender de uma plataforma remota para algo que muitas vezes será consultado poucas vezes ao ano.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6">
+                <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-soft space-y-5">
+                    <div>
+                        <p class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-2">Motivação</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            A ideia do projeto veio da necessidade de ter um controle fácil de administrar sem precisar entregar todos os dados para um aplicativo que você talvez use poucas vezes no ano e que ainda pode expor essas informações em algum incidente.
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-2">Modelo Local</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Neste formato em HTML, os dados ficam com você. Não existe troca com nuvem para o funcionamento principal da aplicação, e o armazenamento acontece localmente no navegador e em exportações JSON feitas por você.
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-2">Trade-off</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            A contrapartida é que a administração dos dados pode exigir mais cuidado, já que não há uma infraestrutura remota gerenciando contas, sincronização ou recuperação automática de backup.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-soft space-y-5">
+                    <div>
+                        <p class="text-[11px] font-black uppercase tracking-[0.22em] text-violet-500 mb-2">Nome do Projeto</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            O projeto anteriormente utilizava o nome <strong>Splitdz B</strong>. O nome foi alterado para <strong>PartNest B</strong> porque a nomenclatura anterior já era usada em outro contexto comercial.
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-black uppercase tracking-[0.22em] text-violet-500 mb-2">Uso Não Comercial</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            PartNest B é usado aqui apenas como identidade alusiva do projeto, sem finalidade comercial.
+                        </p>
+                    </div>
+                    <div class="pt-2">
+                        <a href="https://github.com/someheader/splitd" target="_blank" rel="noreferrer" class="inline-flex px-4 py-2.5 bg-violet-500 hover:bg-violet-600 text-white text-sm font-bold rounded-2xl transition shadow-md shadow-violet-100">
+                            Ver repositório no GitHub
+                        </a>
                     </div>
                 </div>
             </div>
@@ -339,13 +462,19 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div>
                 <p class="text-sm font-bold text-slate-800">
-                    Splitdz <span class="text-violet-500 italic">B</span>
+                    PartNest <span class="text-violet-500 italic">B</span>
                 </p>
                 <p class="text-xs text-slate-400 mt-1">Gestao de assinaturas compartilhadas e balancos mensais.</p>
             </div>
-            <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
-                Organize. Divida. Acompanhe.
-            </p>
+            <div class="flex flex-col sm:items-end gap-2">
+                <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                    Organize. Divida. Acompanhe.
+                </p>
+                <div class="flex items-center gap-4 text-xs font-bold text-slate-500">
+                    <button onclick="switchTab('about')" class="hover:text-violet-600 transition">Sobre</button>
+                    <a href="https://github.com/someheader/splitd" target="_blank" rel="noreferrer" class="hover:text-violet-600 transition">GitHub</a>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -832,7 +961,8 @@
             document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
             document.querySelectorAll('nav button').forEach(button => button.classList.remove('tab-active'));
             $(`view-${tab}`).classList.remove('hidden');
-            $(`tab-${tab}`).classList.add('tab-active');
+            const tabButton = $(`tab-${tab}`);
+            if (tabButton) tabButton.classList.add('tab-active');
             updateHeaderActions(tab);
             closeAllMenus();
             render();
@@ -879,7 +1009,7 @@
             const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `sharepay-backup-${getTodayIso()}.json`;
+            link.download = `partnestb-backup-${getTodayIso()}.json`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
