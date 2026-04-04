@@ -63,6 +63,19 @@
             animation: modalFadeIn 0.2s ease-out forwards;
         }
 
+        .menu-panel {
+            opacity: 0;
+            transform: translateY(-6px) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+
+        .menu-panel.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
         @keyframes modalFadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
@@ -96,7 +109,24 @@
                 <button onclick="switchTab('dash')" id="tab-dash" class="py-2 transition-all">Dashboard</button>
             </nav>
             
-            <div class="flex gap-2">
+            <div class="flex flex-wrap gap-2 justify-center items-center">
+                <input type="file" id="jsonFileInput" accept="application/json,.json" class="hidden">
+                <div class="relative">
+                    <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 w-10 h-10 rounded-xl flex items-center justify-center transition shadow-sm" aria-label="Abrir menu de dados">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.983 5.5a1.5 1.5 0 013.034 0l.14.846a1.5 1.5 0 001.126 1.19l.826.206a1.5 1.5 0 01.743 2.494l-.578.634a1.5 1.5 0 000 2.02l.578.634a1.5 1.5 0 01-.743 2.494l-.826.206a1.5 1.5 0 00-1.126 1.19l-.14.846a1.5 1.5 0 01-3.034 0l-.14-.846a1.5 1.5 0 00-1.126-1.19l-.826-.206a1.5 1.5 0 01-.743-2.494l.578-.634a1.5 1.5 0 000-2.02l-.578-.634a1.5 1.5 0 01.743-2.494l.826-.206a1.5 1.5 0 001.126-1.19l.14-.846z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </button>
+                    <div id="settingsMenu" class="menu-panel absolute right-0 top-12 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/60 p-2 z-50">
+                        <button onclick="window.triggerImportJson()" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">
+                            Importar JSON
+                        </button>
+                        <button onclick="window.exportJson()" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">
+                            Exportar JSON
+                        </button>
+                    </div>
+                </div>
                 <button onclick="openPersonModal()" class="text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg font-semibold transition text-slate-700">
                     + Pessoa
                 </button>
@@ -427,6 +457,56 @@
         function normalizeState() {
             state.assinaturas = state.assinaturas.map(normalizeSubscription);
         }
+        function getExportPayload() {
+            return {
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                data: {
+                    pessoas: state.pessoas.map(person => ({
+                        id: toInt(person.id),
+                        name: String(person.name || '').trim()
+                    })),
+                    assinaturas: state.assinaturas.map(sub => ({
+                        id: toInt(sub.id),
+                        name: String(sub.name || '').trim(),
+                        price: Number(sub.price) || 0,
+                        startDate: sub.startDate || getTodayIso(),
+                        duration: Math.max(0, toInt(sub.duration) || 0),
+                        cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
+                        payerId: toInt(sub.payerId),
+                        memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : []
+                    }))
+                }
+            };
+        }
+        function extractImportData(payload) {
+            if (!payload || typeof payload !== 'object') throw new Error('Arquivo JSON inválido.');
+            const data = payload.data && typeof payload.data === 'object' ? payload.data : payload;
+            if (!Array.isArray(data.pessoas) || !Array.isArray(data.assinaturas)) {
+                throw new Error('O JSON precisa conter "pessoas" e "assinaturas".');
+            }
+            return data;
+        }
+        function applyImportedState(payload) {
+            const data = extractImportData(payload);
+            state = {
+                pessoas: data.pessoas.map(person => ({
+                    id: toInt(person.id),
+                    name: String(person.name || '').trim()
+                })).filter(person => person.id && person.name),
+                assinaturas: data.assinaturas.map(sub => ({
+                    id: toInt(sub.id),
+                    name: String(sub.name || '').trim(),
+                    price: Number(sub.price) || 0,
+                    startDate: sub.startDate || getTodayIso(),
+                    duration: Math.max(0, toInt(sub.duration) || 0),
+                    cycle: sub.cycle === 'Anual' ? 'Anual' : 'Mensal',
+                    payerId: toInt(sub.payerId),
+                    memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : []
+                }))
+            };
+            normalizeState();
+        }
         function getEndDate(startStr, duration) {
             if (!duration || duration === 0) return null;
             const d = new Date(startStr);
@@ -493,6 +573,28 @@
         };
         window.handleBackdropClick = function(event, modalId) {
             if (event.target === $(modalId)) closeModal(modalId);
+        };
+        window.toggleSettingsMenu = function() {
+            $('settingsMenu').classList.toggle('open');
+        };
+        window.closeSettingsMenu = function() {
+            $('settingsMenu').classList.remove('open');
+        };
+        window.triggerImportJson = function() {
+            closeSettingsMenu();
+            $('jsonFileInput').click();
+        };
+        window.exportJson = function() {
+            closeSettingsMenu();
+            const payload = getExportPayload();
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `sharepay-backup-${getTodayIso()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
         };
 
         window.openSubModal = function(editId = null) {
@@ -720,6 +822,28 @@
             closeModal('modalSub');
             render();
         };
+        $('jsonFileInput').onchange = async (e) => {
+            const [file] = e.target.files || [];
+            if (!file) return;
+            try {
+                const content = await file.text();
+                const payload = JSON.parse(content);
+                applyImportedState(payload);
+                render();
+                showConfirm("Importação concluída", "Os dados do arquivo JSON foram carregados com sucesso.", () => {}, true);
+            } catch (error) {
+                showConfirm("Erro ao importar", error.message || "Não foi possível ler o arquivo JSON.", () => {}, true);
+            } finally {
+                e.target.value = '';
+            }
+        };
+        document.addEventListener('click', (event) => {
+            const menu = $('settingsMenu');
+            const button = $('settingsMenuButton');
+            if (!menu.classList.contains('open')) return;
+            if (menu.contains(event.target) || button.contains(event.target)) return;
+            closeSettingsMenu();
+        });
 
         // RENDERING
         function render() {
