@@ -144,39 +144,94 @@
     <main class="max-w-5xl mx-auto px-6 pt-8">
 
         <section id="view-home" class="tab-content space-y-8">
-            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-soft overflow-hidden">
-                <div class="px-8 py-10 md:px-12 md:py-14 bg-gradient-to-br from-slate-50 via-white to-violet-50">
-                    <p class="text-[11px] font-black uppercase tracking-[0.28em] text-violet-500 mb-4">Bem-vindo</p>
-                    <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 max-w-2xl">
-                        Organize assinaturas compartilhadas com clareza, contexto e equilíbrio mensal.
-                    </h2>
-                    <p class="mt-5 max-w-2xl text-sm md:text-base text-slate-500 leading-relaxed">
-                        O Splitdz B ajuda você a registrar pessoas, controlar assinaturas, entender quem paga o quê e acompanhar os balanços mensais de forma visual e simples.
-                    </p>
+            <div class="relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-soft">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(139,92,246,0.14),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(79,70,229,0.12),_transparent_24%)]"></div>
+                <div class="relative px-6 py-10 md:px-12 md:py-14">
+                    <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-8 items-center">
+                        <div>
+                            <p class="text-[11px] font-black uppercase tracking-[0.28em] text-violet-500 mb-4">Split Shared Payments Better</p>
+                            <h2 class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 max-w-3xl leading-[1.02]">
+                                Controle assinaturas compartilhadas sem planilhas confusas ou contas perdidas.
+                            </h2>
+                            <p class="mt-5 max-w-2xl text-sm md:text-base text-slate-500 leading-relaxed">
+                                O Splitdz B foi pensado para quem divide streaming, apps e serviços com outras pessoas e precisa enxergar rapidamente quem participa, quem paga e qual o saldo de cada mês.
+                            </p>
+                            <div class="mt-8 flex flex-wrap gap-3">
+                                <button onclick="switchTab('subs')" class="px-5 py-3 bg-violet-500 hover:bg-violet-600 text-white text-sm font-bold rounded-2xl transition shadow-lg shadow-violet-100">
+                                    Começar pelas Assinaturas
+                                </button>
+                                <button onclick="switchTab('dash')" class="px-5 py-3 bg-white hover:bg-slate-50 text-slate-700 text-sm font-bold rounded-2xl border border-slate-200 transition">
+                                    Ver Dashboard
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="col-span-2 bg-slate-900 text-white rounded-3xl p-5">
+                                <p class="text-[10px] uppercase tracking-[0.22em] text-slate-400 font-black">Visibilidade</p>
+                                <p class="mt-2 text-2xl font-black">Tudo em um só lugar</p>
+                                <p class="mt-2 text-sm text-slate-300 leading-relaxed">Assinaturas, participantes e balanços organizados em uma interface só.</p>
+                            </div>
+                            <div class="bg-white rounded-3xl p-5 border border-slate-200">
+                                <p class="text-[10px] uppercase tracking-[0.22em] text-emerald-500 font-black">Receber</p>
+                                <p class="mt-2 text-xl font-black text-slate-900">Por pessoa</p>
+                                <p class="mt-1 text-xs text-slate-500">Entenda rapidamente quem deve para quem.</p>
+                            </div>
+                            <div class="bg-violet-50 rounded-3xl p-5 border border-violet-100">
+                                <p class="text-[10px] uppercase tracking-[0.22em] text-violet-500 font-black">Planejamento</p>
+                                <p class="mt-2 text-xl font-black text-slate-900">Por mês</p>
+                                <p class="mt-1 text-xs text-slate-500">Acompanhe o cronograma e os detalhes futuros.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
-                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Assinaturas</p>
-                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Cadastre serviços</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-violet-500 mb-3">1. Cadastre</p>
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Monte sua base</h3>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Registre valor, ciclo, duração, pagador e participantes de cada assinatura compartilhada.
+                        Registre pessoas, serviços, valores, ciclos de cobrança e membros participantes de cada divisão.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
-                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Pessoas</p>
-                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Gerencie participantes</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-violet-500 mb-3">2. Entenda</p>
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Veja saldos reais</h3>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Adicione quem participa das divisões e mantenha a base de pessoas organizada para todos os cálculos.
+                        Descubra total a pagar, total a receber e a participação individual de cada pessoa sem cálculos manuais.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
-                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Dashboard</p>
-                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Veja os balanços</h3>
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-violet-500 mb-3">3. Acompanhe</p>
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Planeje o mês</h3>
                     <p class="text-sm text-slate-500 leading-relaxed">
-                        Acompanhe resumos, saldos individuais e o cronograma mensal com detalhes por pessoa e por assinatura.
+                        Use o dashboard para acompanhar assinaturas ativas, cronograma futuro e detalhes de cada período.
                     </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-6">
+                <div class="bg-white p-7 rounded-3xl border border-slate-100 shadow-soft">
+                    <p class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-3">Para quem é</p>
+                    <h3 class="text-2xl font-black text-slate-900 mb-3">Ideal para casas, casais, amigos e equipes pequenas</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        Sempre que várias pessoas dividem um mesmo serviço, o Splitdz B reduz atrito, evita esquecimentos e deixa a cobrança transparente.
+                    </p>
+                </div>
+                <div class="bg-gradient-to-r from-violet-500 to-indigo-600 p-7 rounded-3xl text-white shadow-soft">
+                    <p class="text-[11px] font-black uppercase tracking-[0.22em] text-violet-100 mb-3">Pronto para usar</p>
+                    <h3 class="text-2xl font-black mb-3">Comece cadastrando quem participa e quais assinaturas estão sendo divididas.</h3>
+                    <p class="text-sm text-violet-100 leading-relaxed mb-5">
+                        Em poucos passos você já consegue visualizar os saldos e exportar tudo em JSON para manter um backup do seu controle.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="switchTab('people')" class="px-4 py-2.5 bg-white text-violet-600 text-sm font-bold rounded-2xl hover:bg-violet-50 transition">
+                            Adicionar Pessoas
+                        </button>
+                        <button onclick="switchTab('subs')" class="px-4 py-2.5 bg-violet-400/30 text-white text-sm font-bold rounded-2xl hover:bg-violet-400/40 transition border border-violet-300/30">
+                            Criar Assinatura
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -231,6 +286,20 @@
             </div>
         </section>
     </main>
+
+    <footer class="mt-16 border-t border-slate-100 bg-white/70 backdrop-blur-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+                <p class="text-sm font-bold text-slate-800">
+                    Splitdz <span class="text-violet-500 italic">B</span>
+                </p>
+                <p class="text-xs text-slate-400 mt-1">Gestao de assinaturas compartilhadas e balancos mensais.</p>
+            </div>
+            <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                Organize. Divida. Acompanhe.
+            </p>
+        </div>
+    </footer>
 
     <!-- MODAL ASSINATURA (FORMULÁRIO) -->
     <div id="modalSub" onclick="window.handleBackdropClick(event, 'modalSub')" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
@@ -294,15 +363,12 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <button id="btnDeleteSub" class="px-3 py-2 bg-rose-50 text-rose-500 text-xs font-bold rounded-xl hover:bg-rose-100 transition flex items-center justify-center gap-1.5">
+                    <button id="btnDeleteSub" class="w-9 h-9 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-100 transition flex items-center justify-center" aria-label="Excluir assinatura">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
-                        Excluir
                     </button>
-                    <button id="btnEditSub" class="px-3 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition flex items-center justify-center gap-1.5">
+                    <button id="btnEditSub" class="w-9 h-9 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition flex items-center justify-center" aria-label="Editar assinatura">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
-                        Editar
                     </button>
-                    <button onclick="closeModal('modalSubDetail')" class="text-slate-400 hover:bg-slate-100 p-2 rounded-full transition">✕</button>
                 </div>
             </div>
             
@@ -382,15 +448,12 @@
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Visão Geral Individual</p>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <button id="btnDeletePersonDetail" class="px-3 py-2 bg-rose-50 text-rose-500 text-xs font-bold rounded-xl hover:bg-rose-100 transition flex items-center justify-center gap-1.5">
+                    <button id="btnDeletePersonDetail" class="w-9 h-9 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-100 transition flex items-center justify-center" aria-label="Excluir pessoa">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
-                        Excluir
                     </button>
-                    <button id="btnEditPersonDetail" class="px-3 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl hover:bg-slate-800 transition flex items-center justify-center gap-1.5">
+                    <button id="btnEditPersonDetail" class="w-9 h-9 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition flex items-center justify-center" aria-label="Editar pessoa">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
-                        Editar
                     </button>
-                    <button onclick="closeModal('modalUserDash')" class="text-slate-400 hover:bg-slate-100 p-2 rounded-full transition">✕</button>
                 </div>
             </div>
             <div class="p-8 overflow-y-auto space-y-8">
