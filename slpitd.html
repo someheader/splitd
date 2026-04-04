@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SharePay - Gestão de Assinaturas</title>
+    <title>Splitdz B - Gestão de Assinaturas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -95,16 +95,14 @@
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div class="max-w-5xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </div>
-                <h1 class="text-xl font-bold tracking-tight text-slate-800">SharePay</h1>
+                <h1 onclick="switchTab('home')" class="text-xl font-black tracking-tight text-slate-900 cursor-pointer select-none">
+                    Splitdz <span class="text-violet-500 italic font-extrabold">B</span>
+                </h1>
             </div>
 
             <nav class="flex gap-8 text-sm font-medium text-slate-500">
-                <button onclick="switchTab('subs')" id="tab-subs" class="py-2 tab-active transition-all">Assinaturas</button>
+                <button onclick="switchTab('home')" id="tab-home" class="py-2 tab-active transition-all">Home</button>
+                <button onclick="switchTab('subs')" id="tab-subs" class="py-2 transition-all">Assinaturas</button>
                 <button onclick="switchTab('people')" id="tab-people" class="py-2 transition-all">Pessoas</button>
                 <button onclick="switchTab('dash')" id="tab-dash" class="py-2 transition-all">Dashboard</button>
             </nav>
@@ -112,11 +110,8 @@
             <div class="flex flex-wrap gap-2 justify-center items-center">
                 <input type="file" id="jsonFileInput" accept="application/json,.json" class="hidden">
                 <div class="relative">
-                    <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 w-10 h-10 rounded-xl flex items-center justify-center transition shadow-sm" aria-label="Abrir menu de dados">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.983 5.5a1.5 1.5 0 013.034 0l.14.846a1.5 1.5 0 001.126 1.19l.826.206a1.5 1.5 0 01.743 2.494l-.578.634a1.5 1.5 0 000 2.02l.578.634a1.5 1.5 0 01-.743 2.494l-.826.206a1.5 1.5 0 00-1.126 1.19l-.14.846a1.5 1.5 0 01-3.034 0l-.14-.846a1.5 1.5 0 00-1.126-1.19l-.826-.206a1.5 1.5 0 01-.743-2.494l.578-.634a1.5 1.5 0 000-2.02l-.578-.634a1.5 1.5 0 01.743-2.494l.826-.206a1.5 1.5 0 001.126-1.19l.14-.846z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
+                    <button onclick="window.toggleSettingsMenu()" id="settingsMenuButton" class="text-xs bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3 py-2 rounded-lg font-semibold transition shadow-sm" aria-label="Abrir menu de opções">
+                        Opções
                     </button>
                     <div id="settingsMenu" class="menu-panel absolute right-0 top-12 w-44 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-200/60 p-2 z-50">
                         <button onclick="window.triggerImportJson()" class="w-full text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded-xl px-3 py-2 transition">
@@ -127,19 +122,56 @@
                         </button>
                     </div>
                 </div>
-                <button onclick="openPersonModal()" class="text-xs bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg font-semibold transition text-slate-700">
-                    + Pessoa
-                </button>
-                <button onclick="openSubModal()" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-semibold transition shadow-md shadow-indigo-100">
-                    + Assinatura
-                </button>
             </div>
         </div>
     </header>
 
     <main class="max-w-5xl mx-auto px-6 pt-8">
+
+        <section id="view-home" class="tab-content space-y-8">
+            <div class="bg-white rounded-[2rem] border border-slate-100 shadow-soft overflow-hidden">
+                <div class="px-8 py-10 md:px-12 md:py-14 bg-gradient-to-br from-slate-50 via-white to-violet-50">
+                    <p class="text-[11px] font-black uppercase tracking-[0.28em] text-violet-500 mb-4">Bem-vindo</p>
+                    <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 max-w-2xl">
+                        Organize assinaturas compartilhadas com clareza, contexto e equilíbrio mensal.
+                    </h2>
+                    <p class="mt-5 max-w-2xl text-sm md:text-base text-slate-500 leading-relaxed">
+                        O Splitdz B ajuda você a registrar pessoas, controlar assinaturas, entender quem paga o quê e acompanhar os balanços mensais de forma visual e simples.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Assinaturas</p>
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Cadastre serviços</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        Registre valor, ciclo, duração, pagador e participantes de cada assinatura compartilhada.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Pessoas</p>
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Gerencie participantes</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        Adicione quem participa das divisões e mantenha a base de pessoas organizada para todos os cálculos.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+                    <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3">Dashboard</p>
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-2">Veja os balanços</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        Acompanhe resumos, saldos individuais e o cronograma mensal com detalhes por pessoa e por assinatura.
+                    </p>
+                </div>
+            </div>
+        </section>
         
-        <section id="view-subs" class="tab-content">
+        <section id="view-subs" class="tab-content hidden">
+            <div class="mb-6">
+                <button onclick="window.openSubModal()" id="subsActions" class="inline-flex text-xs bg-violet-500 hover:bg-violet-600 text-white px-3 py-2 rounded-lg font-semibold transition shadow-md shadow-violet-100">
+                    + Assinatura
+                </button>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="subsGrid"></div>
             <div id="empty-subs" class="hidden text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-100 mt-4">
                 <p class="text-slate-400">Nenhuma assinatura registrada.</p>
@@ -147,6 +179,11 @@
         </section>
 
         <section id="view-people" class="tab-content hidden">
+            <div class="mb-6">
+                <button onclick="window.openPersonModal()" id="peopleActions" class="inline-flex text-xs bg-violet-500 hover:bg-violet-600 text-white px-3 py-2 rounded-lg font-semibold transition shadow-md shadow-violet-100">
+                    + Pessoa
+                </button>
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="peopleGrid"></div>
         </section>
 
@@ -564,6 +601,8 @@
             document.querySelectorAll('nav button').forEach(button => button.classList.remove('tab-active'));
             $(`view-${tab}`).classList.remove('hidden');
             $(`tab-${tab}`).classList.add('tab-active');
+            updateHeaderActions(tab);
+            closeAllMenus();
             render();
         };
 
@@ -574,18 +613,29 @@
         window.handleBackdropClick = function(event, modalId) {
             if (event.target === $(modalId)) closeModal(modalId);
         };
+        window.toggleMenu = function(menuId) {
+            const targetMenu = $(menuId);
+            document.querySelectorAll('.menu-panel').forEach(menu => {
+                if (menu.id !== menuId) menu.classList.remove('open');
+            });
+            targetMenu.classList.toggle('open');
+        };
         window.toggleSettingsMenu = function() {
-            $('settingsMenu').classList.toggle('open');
+            toggleMenu('settingsMenu');
         };
         window.closeSettingsMenu = function() {
             $('settingsMenu').classList.remove('open');
         };
+        window.closeAllMenus = function() {
+            document.querySelectorAll('.menu-panel').forEach(menu => menu.classList.remove('open'));
+        };
+        function updateHeaderActions(activeTab) {}
         window.triggerImportJson = function() {
-            closeSettingsMenu();
+            closeAllMenus();
             $('jsonFileInput').click();
         };
         window.exportJson = function() {
-            closeSettingsMenu();
+            closeAllMenus();
             const payload = getExportPayload();
             const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
@@ -838,11 +888,16 @@
             }
         };
         document.addEventListener('click', (event) => {
-            const menu = $('settingsMenu');
-            const button = $('settingsMenuButton');
-            if (!menu.classList.contains('open')) return;
-            if (menu.contains(event.target) || button.contains(event.target)) return;
-            closeSettingsMenu();
+            const menus = [
+                { menu: $('settingsMenu'), button: $('settingsMenuButton') },
+                { menu: $('subsMenu'), button: $('subsMenuButton') },
+                { menu: $('peopleMenu'), button: $('peopleMenuButton') }
+            ];
+            const clickedInsideAny = menus.some(({ menu, button }) => {
+                if (!menu || !button) return false;
+                return menu.contains(event.target) || button.contains(event.target);
+            });
+            if (!clickedInsideAny) closeAllMenus();
         });
 
         // RENDERING
@@ -949,7 +1004,10 @@
             monthlyContainer.innerHTML = monthlyHTML;
         }
 
-        window.onload = render;
+        window.onload = function() {
+            updateHeaderActions('home');
+            render();
+        };
     </script>
 </body>
 </html>
