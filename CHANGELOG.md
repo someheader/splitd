@@ -1,5 +1,60 @@
 # Changelog
 
+## 2026-04-12
+
+### Funcionalidades e UI
+
+- **Sistema de Lembretes**: Implementação de notificações nativas para alertar sobre vencimentos em 48h.
+- **Consolidação de Dashboard**: Dashboard agora conta com 4 visões gráficas (Distribuição, Projeção, Saldos e Categorias).
+
+## 2026-04-11
+
+### Funcionalidades
+
+- **Gestão de Categorias**: Implementação de aba de Configurações para gerenciar categorias de assinaturas e vincular serviços a temas específicos.
+
+## 2026-04-10
+
+### Mobile e PWA
+
+- **Suporte a PWA**: Implementação de `manifest.json` e `sw.js` para permitir a instalação da aplicação como um aplicativo nativo no celular e funcionamento offline.
+
+## 2026-04-09
+
+### Gráficos e Visualização
+
+- **Saldo Líquido**: Implementação de gráfico de barras horizontais no Dashboard para comparação imediata do equilíbrio financeiro entre todos os participantes.
+
+## 2026-04-08
+
+### Funcionalidades
+
+- **Busca de Assinaturas**: Inclusão de filtro de pesquisa na lista de assinaturas para localização rápida por nome.
+
+## 2026-04-07
+
+### UX e Gráficos
+
+- **Tooltips Inteligentes**: Adição de tooltips personalizados nos gráficos do Dashboard.
+- **Detalhamento**: O gráfico de rosca agora exibe tanto o valor total da assinatura quanto o valor da cota por pessoa ao passar o mouse.
+
+## 2026-04-06
+
+### Gráficos e Visualização
+
+- **Análise Visual**: Inclusão de gráficos interativos no Dashboard utilizando Chart.js.
+- **Distribuição de Gastos**: Gráfico de rosca (Donut) mostrando a proporção de custo por assinatura no mês atual.
+- **Projeção Mensal**: Gráfico de barras exibindo a previsão de gastos totais para os próximos 12 meses.
+- **Suporte a Temas**: Gráficos ajustam cores de eixos e textos automaticamente entre Modo Claro e Escuro.
+
+## 2026-04-05
+
+### Interface
+
+- **Modo Escuro**: Implementação de botão alternador (toggle) no cabeçalho com persistência no `localStorage`.
+- **Refinamento Visual**: Adição de classes `dark:` em cards, modais e tabelas para suporte completo ao tema escuro.
+- **Correção de Contraste**: Ajuste nos fundos de modais e elementos dinâmicos para evitar que se misturem ao fundo no modo escuro.
+
 ## 2026-04-04
 
 ### Estrutura e identidade
@@ -94,3 +149,13 @@
 - Criação de `.gitignore` ignorando apenas `.codex`.
 - Atualização contínua do `README.md` para refletir a estrutura atual.
 
+## Recursos Futuros (Planejamento)
+
+### Funcionalidades em estudo
+
+- **Categorização**: Tags para agrupar assinaturas (Streaming, Casa, Trabalho).
+- **Gráficos e Visualização**: Gráficos de rosca para distribuição de gastos e barras para histórico mensal.
+- **Suporte Multi-moeda**: Conversão manual de valores em USD/EUR para BRL.
+- **Mobile**: Transformação em PWA para instalação como aplicativo no celular.
+- **Pesquisa e Filtros**: Busca rápida na lista de pessoas (assinaturas já implementadas).
+- **Notificações Locais**: Lembretes de vencimento baseados na data de início e ciclo.
