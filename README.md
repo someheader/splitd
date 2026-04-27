@@ -1,6 +1,26 @@
-# PartNest B
+<div align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/3426/3426514.png" width="100" height="100" alt="PartNest B Logo">
+  <h1>PartNest B</h1>
+  <p><b>Subscription Cost Intelligence & Shared Management</b></p>
 
-Aplicação web estática para controle de assinaturas compartilhadas, divisão de custos entre pessoas, acompanhamento de pagamentos e visualização de balanços mensais.
+  ![Versão](https://img.shields.io/badge/versão-2.0.0-7C5DFA?style=for-the-badge)
+  ![Licença](https://img.shields.io/badge/licença-MIT-33D69F?style=for-the-badge)
+  ![PWA](https://img.shields.io/badge/PWA-Pronto-FF8F00?style=for-the-badge)
+  ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+</div>
+
+---
+
+### 📱 Preview do Projeto
+> **Nota:** Substitua o link abaixo pelo link real da sua captura de tela (ex: enviando a imagem para o próprio GitHub ou um serviço de hospedagem).
+
+<div align="center">
+  <img src="https://via.placeholder.com/800x450.png?text=Preview+PartNest+B+Mobile+e+Desktop" width="100%" alt="Screenshot PartNest B">
+</div>
+
+---
+
+PartNest B é uma aplicação web estática para controle de assinaturas compartilhadas, divisão de custos entre pessoas, acompanhamento de pagamentos e visualização de balanços mensais.
 
 O projeto foi construído em HTML, CSS e JavaScript puro, com interface baseada em Tailwind via CDN. Não exige backend nem banco de dados para funcionar.
 
