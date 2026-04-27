@@ -14,7 +14,7 @@ O projeto anteriormente utilizava o nome `Splitdz B`. Esse nome foi substituído
 
 A ideia do projeto veio da necessidade de ter um controle facil de administrar sem precisar vender a alma e entregar todos os dados para um aplicativo que voce vai usar 2 vezes no ano e depois correr o risco de ver tudo vazado aleatoriamente em algum ataque.
 
-Neste modelo em HTML, os dados ficam com voce. Nao existe troca de dados com a nuvem, nem dependencia de um servico externo para o funcionamento basico da ferramenta.
+Neste modelo em HTML, os dados ficam com você. Não existe troca de dados com a nuvem, nem dependência de um serviço externo para o funcionamento básico da ferramenta.
 
 Ao mesmo tempo, isso traz um custo: pode ser mais dificil administrar os dados, porque tudo fica salvo localmente em JSON, `localStorage` e mecanismos locais do navegador, em vez de existir uma infraestrutura remota cuidando disso para voce.
 
@@ -36,7 +36,7 @@ O PartNest B ajuda a:
 
 ### Home
 
-Página inicial em formato de landing page com apresentação da proposta do sistema.
+Página inicial em formato de landing page com apresentação da proposta do sistema e indicadores rápidos de funcionamento.
 
 ### Sobre
 
@@ -66,12 +66,12 @@ Página inicial em formato de landing page com apresentação da proposta do sis
 - resumo global
 - resumo anual
 - extratos anuais por pessoa
-- balanço individual por pessoa
+- balanço individual por pessoa com indicadores de saldo
 - cronograma mensal com detalhes expansíveis
 - acesso direto aos modais de pessoa e assinatura a partir dos cards
-- indicadores de pendência por pessoa
+- visões gráficas: distribuição mensal, categorias, saldo líquido e projeção de 12 meses
 
-### Visão Geral Individual
+### Perfil Individual
 
 - total a receber
 - total a pagar
@@ -80,12 +80,12 @@ Página inicial em formato de landing page com apresentação da proposta do sis
 - status de pagamento por assinatura
 - compartilhamento como imagem
 
-### Opções
+### Configurações e Backup
 
-- página `Sobre`
-- importar JSON
-- exportar JSON
-- remover tudo
+- gerenciamento de categorias (ícones e cores)
+- importação e exportação de backups em JSON
+- limpeza total de dados locais
+- ativação de notificações nativas
 
 ## Persistência
 

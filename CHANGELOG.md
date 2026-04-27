@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-04-14
+
+### UX e Onboarding
+- **Tour Interativo**: Implementação de um sistema de "Guided Tour" (passo a passo) no Dashboard para facilitar o primeiro contato do usuário com as métricas e funcionalidades.
+- **Central de Ajuda**: Adição de modal explicativo detalhando a lógica matemática por trás dos cálculos de saldo, projeções e pendências, acessível via Dashboard.
+- **Sistema de Confirmação**: Padronização de modais de confirmação e alertas para ações críticas (exclusões, limpeza de dados), substituindo os diálogos nativos do navegador por uma interface condizente com o design system.
+
+### Dashboard e Filtros
+- **Seletor de Período Customizado**: Implementação de um seletor de mês e ano otimizado (Month Picker) com suporte a navegação por anos e visão anual consolidada.
+- **Tags de Filtragem**: Visualização dinâmica de filtros ativos (categoria e período) com botões de remoção rápida.
+- **Gráfico Comparativo**: Inclusão de visualização de barras comparando o desempenho financeiro do mês anterior com o mês atual para análise de tendência.
+
+### Gestão e Organização
+- **Detalhamento de Categorias**: Nova modal de visão detalhada para categorias, permitindo visualizar a soma de custos ativos e a lista de serviços vinculados.
+- **Navegação Cruzada**: Melhoria na transição entre detalhes de assinaturas e perfis individuais de pessoas diretamente pelas listas do Dashboard.
+- **Aparência Dinâmica**: Implementação de seletores de cores e ícones (FontAwesome) para pessoas e categorias, permitindo maior personalização visual.
+
+### Manutenção
+- **Controle de Versão**: Inclusão da pasta `stitch/` no `.gitignore` para evitar o versionamento de rascunhos de design e arquivos temporários de estilo.
+
+## 2026-04-13
+
+### Interface e Navegação
+- **Arquitetura de Navegação**: Implementação de Sidebar fixa para Desktop e Bottom Navigation Bar para Mobile, otimizando o espaço de trabalho em diferentes dispositivos.
+- **Refinamento Estético (Design System)**: Aplicação de efeitos de Glassmorphism, desfoque de fundo e sombras em camadas para maior profundidade visual, conforme definido no novo Design System.
+
+### Performance e Offline
+- **Otimização de Cache PWA**: Service Worker configurado para realizar o pre-caching de bibliotecas críticas (Tailwind, Chart.js) e fontes, garantindo carregamento rápido e suporte offline inicial.
+
 ## 2026-04-12
 
 ### Funcionalidades e UI
