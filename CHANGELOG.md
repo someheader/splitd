@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-04-15
+
+### Inteligência Financeira
+- **Economia Gerada**: Nova métrica implementada no Dashboard e na lista de Assinaturas que quantifica o valor total poupado pelo grupo através da divisão estratégica de custos.
+- **Simplificação de Dívidas**: Integração de algoritmo de liquidação de saldos (Debt Simplification) para sugerir o menor número possível de transferências entre os membros.
+
+### Dashboard
+- **Widget de Sugestões de Acerto**: Adição de um novo componente visual que indica exatamente "quem deve pagar quem" para zerar as pendências do período.
+- **Refatoração de KPIs**: Substituição da projeção anual no Dashboard principal pelo indicador de Economia do Grupo, focando no valor economizado pelos usuários.
+
 ## 2026-04-14
 
 ### UX e Onboarding

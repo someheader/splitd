@@ -692,6 +692,14 @@
                             </h2>
                             <div id="dash-people" class="space-y-3"></div>
                         </div>
+                        <!-- Sugestões de Pagamento (Debt Simplification) -->
+                        <div id="dash-settlements-container" class="bg-white dark:bg-pn-surface-dark p-6 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
+                            <h2 class="text-sm font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                <span class="w-1.5 h-4 bg-pn-primary rounded-full"></span>
+                                Sugestões de Acerto
+                            </h2>
+                            <div id="dash-settlements" class="space-y-3"></div>
+                        </div>
                     </div>
 
                     <!-- Right: Charts and Visuals -->
@@ -1622,6 +1630,38 @@
             return balance;
         }
 
+        function getOptimizedSettlements(balances, peopleMap) {
+            const debtorList = [];
+            const creditorList = [];
+
+            Object.entries(balances).forEach(([id, stats]) => {
+                const net = stats.recebe - stats.deve;
+                if (net < -0.01) debtorList.push({ id: parseInt(id), amount: Math.abs(net) });
+                else if (net > 0.01) creditorList.push({ id: parseInt(id), amount: net });
+            });
+
+            const transactions = [];
+            let i = 0, j = 0;
+            while (i < debtorList.length && j < creditorList.length) {
+                const debtor = debtorList[i];
+                const creditor = creditorList[j];
+                const amount = Math.min(debtor.amount, creditor.amount);
+
+                transactions.push({
+                    from: peopleMap[debtor.id]?.name || '?',
+                    to: peopleMap[creditor.id]?.name || '?',
+                    amount: amount
+                });
+
+                debtor.amount -= amount;
+                creditor.amount -= amount;
+
+                if (debtor.amount < 0.01) i++;
+                if (creditor.amount < 0.01) j++;
+            }
+            return transactions;
+        }
+
         normalizeState();
 
         // UI NAVIGATION
@@ -1969,6 +2009,11 @@
                     title: "Balanço Individual",
                     text: "Veja rapidamente quem precisa pagar ou receber no período selecionado.",
                     element: "dash-people"
+                },
+                {
+                    title: "Sugestões de Acerto",
+                    text: "O sistema calcula automaticamente o menor número de transferências necessárias para que todos fiquem com saldo zero.",
+                    element: "dash-settlements-container"
                 },
                 {
                     title: "Análise Visual",
@@ -3019,6 +3064,7 @@
             const activeSubs = state.assinaturas.filter(isSubActiveToday);
             const totalMonthly = activeSubs.reduce((acc, sub) => acc + (sub.cycle === "Mensal" ? sub.price : sub.price / 12), 0);
             const totalPendingReceivable = activeSubs.reduce((acc, sub) => acc + getPendingReceivableTotal(sub), 0);
+            const totalSavings = activeSubs.reduce((acc, sub) => acc + (sub.price * (sub.memberIds.length - 1)), 0);
             
             const catCounts = {};
             activeSubs.forEach(s => { if(s.category) catCounts[s.category] = (catCounts[s.category] || 0) + 1; });
@@ -3026,7 +3072,7 @@
 
             if (summary) {
                 summary.innerHTML = `
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
+                    <div class="bg-white dark:bg-pn-surface-dark p-4 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
                         <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                         </div>
@@ -3040,19 +3086,19 @@
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Custo Mensal</p>
                         <p class="text-xl font-black text-pn-success mt-1">${formatBRL(totalMonthly)}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
+                    <div class="bg-white dark:bg-pn-surface-dark p-4 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
                         <div class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">A Receber</p>
                         <p class="text-xl font-black text-pn-warning mt-1">${formatBRL(totalPendingReceivable)}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
+                    <div class="bg-white dark:bg-pn-surface-dark p-4 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft border-l-4 border-l-pn-primary">
                         <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+                            <i class="fas fa-piggy-bank text-lg"></i>
                         </div>
-                        <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Principal Cat.</p>
-                        <p class="text-xl font-black text-slate-900 dark:text-white mt-1 truncate">${mainCat}</p>
+                        <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Economia do Grupo</p>
+                        <p class="text-xl font-black text-pn-primary mt-1 truncate">${formatBRL(totalSavings)}</p>
                     </div>
                 `;
             }
@@ -3283,6 +3329,7 @@
 
             const annualTotal = avgMonthly * 12;
             const activeSubsCount = state.assinaturas.filter(isSubActiveToday).length;
+            const totalSavings = filteredActiveSubs.reduce((acc, sub) => acc + (sub.price * (sub.memberIds.length - 1)), 0);
 
             const momTrend = prevAvgMonthly > 0 ? ((avgMonthly - prevAvgMonthly) / prevAvgMonthly) * 100 : 0;
             const trendClass = momTrend > 0 ? 'text-rose-500' : (momTrend < 0 ? 'text-emerald-500' : 'text-slate-400');
@@ -3298,11 +3345,11 @@
                     <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${formatBRL(avgMonthly)}</p>
                 </div>
                 <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
-                    <div title="Projeção do custo total acumulado para os próximos 12 meses." class="w-10 h-10 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mb-4 cursor-help">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    <div title="Economia total estimada do grupo por estarem dividindo os custos." class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-pn flex items-center justify-center mb-4 cursor-help">
+                        <i class="fas fa-hand-holding-dollar text-lg"></i>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Projeção Anual</p>
-                    <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${formatBRL(annualTotal)}</p>
+                    <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Economia Gerada</p>
+                    <p class="text-xl font-black text-emerald-600 mt-1">${formatBRL(totalSavings)}</p>
                 </div>
                 <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
                     <div title="Quantidade de assinaturas que estão marcadas como ativas no momento." class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4 cursor-help">
@@ -3401,6 +3448,27 @@
                         </div>
                     </button>`;
             }).join('');
+
+            // Optimized Settlements (Simplificação de Dívidas)
+            const optimizedSettlements = getOptimizedSettlements(currentBalance, peopleMap);
+            const dashSettlements = $('dash-settlements');
+            if (dashSettlements) {
+                dashSettlements.innerHTML = optimizedSettlements.length ? optimizedSettlements.map(s => `
+                    <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-300">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <span class="text-xs font-bold text-slate-700 dark:text-white truncate">${escapeHtml(s.from)}</span>
+                            <i class="fas fa-arrow-right text-[10px] text-pn-primary"></i>
+                            <span class="text-xs font-bold text-slate-700 dark:text-white truncate">${escapeHtml(s.to)}</span>
+                        </div>
+                        <p class="text-xs font-black text-pn-primary whitespace-nowrap">${formatBRL(s.amount)}</p>
+                    </div>
+                `).join('') : `
+                    <div class="py-4 text-center">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sem acertos pendentes</p>
+                        <p class="text-[9px] text-slate-400 mt-1">Todos os saldos estão zerados.</p>
+                    </div>
+                `;
+            }
 
             let monthlyHTML = "";
             for (let i = 0; i < 12; i++) {
