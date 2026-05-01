@@ -175,7 +175,9 @@ Os dados são mantidos em memória no navegador e podem ser exportados em JSON. 
 
 ## Próximos Passos Sugeridos
 
-- filtros por período no dashboard
 - validações mais avançadas no importador JSON
 - relatórios adicionais por assinatura
-- agrupamentos e filtros por status de pagamento
+- suporte a conversão de moedas (Dólar/Euro para Real)
+- **Suporte Multi-moeda**: Conversão manual de valores em USD/EUR para BRL.
+- **Anexos**: Possibilidade de anexar comprovantes de pagamento (PDF/Imagem) convertidos em Base64 dentro do JSON.
+- **Histórico de Pagamentos**: Registro log de meses anteriores para consulta de auditoria.

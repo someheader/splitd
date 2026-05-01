@@ -508,19 +508,27 @@
             </div>
         </section>
         
-        <section id="view-subs" class="tab-content hidden">
-            <div id="subs-top-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"></div>
-            <div class="mb-6 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-                <button onclick="window.openSubModal()" id="subsActions" class="inline-flex text-xs bg-violet-500 hover:bg-violet-600 text-white px-3 py-2 rounded-lg font-semibold transition shadow-md shadow-violet-100 shrink-0">
-                    + Assinatura
-                </button>
-                <div class="relative w-full sm:max-w-xs">
-                    <input type="text" id="subSearchInput" oninput="window.renderSubs()" placeholder="Buscar assinatura..." class="w-full text-xs px-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-violet-500/20 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+        <section id="view-subs" class="tab-content hidden space-y-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Assinaturas</h2>
+                    <p class="text-xs text-slate-400 dark:text-pn-text-secondary font-bold uppercase tracking-widest mt-1">Gerenciamento de serviços e repasses mensais</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <div class="relative w-full sm:max-w-xs">
+                        <input type="text" id="subSearchInput" oninput="window.renderSubs()" placeholder="Buscar assinatura..." class="w-full text-xs px-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-pn-primary/20 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <button onclick="window.openSubModal()" class="px-5 py-2.5 bg-pn-primary hover:bg-pn-primary-light text-white text-sm font-bold rounded-pn transition shadow-lg shadow-pn-primary/20 whitespace-nowrap">
+                        + Adicionar Assinatura
+                    </button>
                 </div>
             </div>
+
+            <div id="subs-top-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="subsGrid"></div>
             <div id="empty-subs" class="hidden text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800 mt-4">
                 <p class="text-slate-400">Nenhuma assinatura registrada.</p>
@@ -533,14 +541,25 @@
                     <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Pessoas</h2>
                     <p class="text-xs text-slate-400 dark:text-pn-text-secondary font-bold uppercase tracking-widest mt-1">Gerenciamento de participantes e balanços</p>
                 </div>
-                <button onclick="window.openPersonModal()" class="px-5 py-2.5 bg-pn-primary hover:bg-pn-primary-light text-white text-sm font-bold rounded-pn transition shadow-lg shadow-pn-primary/20">
-                    + Adicionar Pessoa
-                </button>
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <div class="relative w-full sm:max-w-xs">
+                        <input type="text" id="peopleSearchInput" oninput="window.renderPeople()" placeholder="Buscar pessoa..." class="w-full text-xs px-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-pn-primary/20 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <button onclick="window.openPersonModal()" class="px-5 py-2.5 bg-pn-primary hover:bg-pn-primary-light text-white text-sm font-bold rounded-pn transition shadow-lg shadow-pn-primary/20 whitespace-nowrap">
+                        + Adicionar Pessoa
+                    </button>
+                </div>
             </div>
 
-            <div id="people-top-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+            <div id="people-top-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"></div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="peopleGrid"></div>
+            <div id="empty-people" class="hidden text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800 mt-4">
+                <p class="text-slate-400">Nenhuma pessoa encontrada.</p>
+            </div>
         </section>
 
         <section id="view-categories" class="tab-content hidden space-y-8">
@@ -549,11 +568,19 @@
                     <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Categorias</h2>
                     <p class="text-xs text-slate-400 dark:text-pn-text-secondary font-bold uppercase tracking-widest mt-1">Organize seus serviços por temas</p>
                 </div>
-                <button onclick="window.openCategoryModal()" class="px-5 py-2.5 bg-pn-primary hover:bg-pn-primary-light text-white text-sm font-bold rounded-pn transition shadow-lg shadow-pn-primary/20">
-                    + Adicionar Categoria
-                </button>
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <div class="relative w-full sm:max-w-xs">
+                        <input type="text" id="categorySearchInput" oninput="window.renderCategories()" placeholder="Buscar categoria..." class="w-full text-xs px-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-pn-primary/20 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <button onclick="window.openCategoryModal()" class="px-5 py-2.5 bg-pn-primary hover:bg-pn-primary-light text-white text-sm font-bold rounded-pn transition shadow-lg shadow-pn-primary/20 whitespace-nowrap">
+                        + Adicionar Categoria
+                    </button>
+                </div>
             </div>
-            <div id="categories-top-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+            <div id="categories-top-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"></div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="categoriesGrid"></div>
             <div id="empty-categories" class="hidden text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800 mt-4">
                 <p class="text-slate-400">Nenhuma categoria registrada.</p>
@@ -815,6 +842,10 @@
                             <input type="text" id="subName" required class="custom-input" placeholder="Netflix, iCloud...">
                         </div>
                         <div>
+                            <label class="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-pn-text-secondary mb-2 block">Link de Acesso</label>
+                            <input type="url" id="subUrl" class="custom-input" placeholder="https://...">
+                        </div>
+                        <div>
                             <label class="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-pn-text-secondary mb-2 block">Valor Total (R$)</label>
                             <input type="number" step="0.01" id="subPrice" required class="custom-input">
                         </div>
@@ -929,6 +960,9 @@
                     </button>
                     <button id="btnEditSub" class="w-10 h-10 bg-pn-primary text-white rounded-pn hover:bg-pn-primary-light transition flex items-center justify-center shadow-lg shadow-pn-primary/20" aria-label="Editar assinatura">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg>
+                    </button>
+                    <button id="btnVisitSub" class="hidden w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn hover:bg-pn-primary/20 transition flex items-center justify-center" title="Acessar Serviço">
+                        <i class="fas fa-external-link-alt text-xs"></i>
                     </button>
                 </div>
                 <button onclick="closeModal('modalSubDetail')" class="flex-1 px-4 py-3 bg-white dark:bg-pn-bg-dark border border-pn-primary/30 dark:border-pn-primary/20 text-center text-sm font-bold text-pn-primary hover:bg-pn-primary/5 rounded-pn transition">
@@ -1293,6 +1327,10 @@
             if (memberId === sub.payerId) return 0;
             return getMemberPaymentStatus(sub, memberId) === 'paid' ? 0 : getSplitPrice(sub);
         }
+        function getSubSavings(sub) {
+            const monthlyPrice = sub.cycle === 'Anual' ? sub.price / 12 : sub.price;
+            return monthlyPrice * (sub.memberIds.length - 1);
+        }
         function getPendingReceivableTotal(sub) {
             const splitPrice = getSplitPrice(sub);
             return sub.memberIds.reduce((total, memberId) => {
@@ -1342,7 +1380,8 @@
                 payerId,
                 memberIds,
                 paymentStatus: normalizePaymentStatus(sub.paymentStatus || {}, memberIds, payerId),
-                enabled: sub.enabled !== false
+                enabled: sub.enabled !== false,
+                url: String(sub.url || '').trim()
             };
         }
         
@@ -1384,6 +1423,15 @@
             return person?.color || 'bg-pn-primary';
         }
 
+        // Debounce utility for search inputs
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
         function normalizeState() {
             state.assinaturas = state.assinaturas.map(normalizeSubscription);
             
@@ -1400,6 +1448,13 @@
                 state.categorias = state.categorias.map(c => typeof c === 'string' ? { name: c, icon: 'fas fa-tag', color: 'bg-pn-primary' } : { ...c, color: c.color || 'bg-pn-primary' });
             }
         }
+
+        window.openExternalLink = function(url) {
+            if (!url) return;
+            showConfirm("Sair do PartNest?", "Você será redirecionado para um site externo. Deseja continuar?", () => {
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }, false, 'info');
+        };
 
         function formatDateTime(value) {
             if (!value) return '';
@@ -1475,8 +1530,12 @@
             updateExportSuggestionUI();
         }
         function saveState() {
+            // Quick check to avoid redundant saves if needed
+            const serialized = JSON.stringify(getExportPayload().data);
+            if (localStorage.getItem(STORAGE_KEY) === serialized) return;
+            
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(getExportPayload().data));
+                localStorage.setItem(STORAGE_KEY, serialized);
             } catch (error) {
                 console.warn('Nao foi possivel salvar os dados localmente.', error);
             }
@@ -1521,7 +1580,8 @@
                         payerId: toInt(sub.payerId),
                         memberIds: Array.isArray(sub.memberIds) ? sub.memberIds.map(id => toInt(id)) : [],
                         paymentStatus: sub.paymentStatus && typeof sub.paymentStatus === 'object' ? sub.paymentStatus : {},
-                        enabled: sub.enabled !== false
+                        enabled: sub.enabled !== false,
+                        url: String(sub.url || '').trim()
                     }))
                 }
             };
@@ -1635,9 +1695,10 @@
             const creditorList = [];
 
             Object.entries(balances).forEach(([id, stats]) => {
-                const net = stats.recebe - stats.deve;
-                if (net < -0.01) debtorList.push({ id: parseInt(id), amount: Math.abs(net) });
-                else if (net > 0.01) creditorList.push({ id: parseInt(id), amount: net });
+                // Arredonda para 2 casas decimais para evitar imprecisão de ponto flutuante
+                const net = Math.round((stats.recebe - stats.deve) * 100) / 100;
+                if (net < 0) debtorList.push({ id: parseInt(id), amount: Math.abs(net) });
+                else if (net > 0) creditorList.push({ id: parseInt(id), amount: net });
             });
 
             const transactions = [];
@@ -1648,7 +1709,7 @@
                 const amount = Math.min(debtor.amount, creditor.amount);
 
                 transactions.push({
-                    from: peopleMap[debtor.id]?.name || '?',
+                    from: peopleMap[debtor.id]?.name || `Usuário ${debtor.id}`,
                     to: peopleMap[creditor.id]?.name || '?',
                     amount: amount
                 });
@@ -1872,6 +1933,7 @@
                 const sub = state.assinaturas.find(item => item.id === editId);
                 if (sub) {
                     $('subName').value = sub.name;
+                    $('subUrl').value = sub.url || '';
                     $('subPrice').value = sub.price;
                     $('startDate').value = sub.startDate;
                     $('subDuration').value = sub.duration;
@@ -1952,6 +2014,14 @@
             $('btnEditSub').onclick = () => {
                 window.openSubModal(sub.id);
             };
+
+            const btnVisit = $('btnVisitSub');
+            if (sub.url) {
+                btnVisit.classList.remove('hidden');
+                btnVisit.onclick = () => window.openExternalLink(sub.url);
+            } else {
+                btnVisit.classList.add('hidden');
+            }
 
             $('modalSubDetail').classList.remove('hidden');
         };
@@ -2354,10 +2424,21 @@
 
             $('confirmTitle').innerText = title;
             $('confirmText').innerText = text;
-            confirmIcon.className = `w-16 h-16 rounded-pn flex items-center justify-center mx-auto mb-6 ${variant === 'success' ? 'bg-pn-success/10 text-pn-success' : 'bg-pn-danger/10 text-pn-danger'}`;
-            confirmIcon.innerHTML = variant === 'success'
-                ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M5 13l4 4L19 7" /></svg>`
-                : `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
+
+            if (variant === 'success') {
+                confirmIcon.className = "w-16 h-16 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mx-auto mb-6";
+                confirmIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M5 13l4 4L19 7" /></svg>`;
+                actionBtn.className = "flex-1 py-3 bg-pn-success text-white font-bold rounded-pn hover:bg-pn-success/90 transition shadow-lg shadow-pn-success/20 text-sm";
+            } else if (variant === 'info') {
+                confirmIcon.className = "w-16 h-16 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mx-auto mb-6";
+                confirmIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                actionBtn.className = "flex-1 py-3 bg-pn-primary text-white font-bold rounded-pn hover:bg-pn-primary-light transition shadow-lg shadow-pn-primary/20 text-sm";
+            } else { // default to danger
+                confirmIcon.className = "w-16 h-16 bg-pn-danger/10 text-pn-danger rounded-pn flex items-center justify-center mx-auto mb-6";
+                confirmIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
+                actionBtn.className = "flex-1 py-3 bg-pn-danger text-white font-bold rounded-pn hover:bg-pn-danger/90 transition shadow-lg shadow-pn-danger/20 text-sm";
+            }
+
             if (isAlert) {
                 cancelBtn.classList.add('hidden');
                 actionBtn.innerText = "Ok";
@@ -2365,7 +2446,6 @@
                 cancelBtn.classList.remove('hidden');
                 actionBtn.innerText = "Confirmar";
             }
-            actionBtn.className = `flex-1 py-3 text-white font-bold rounded-pn transition shadow-lg ${variant === 'success' ? 'bg-pn-success hover:bg-pn-success/90 shadow-pn-success/20' : 'bg-pn-danger hover:bg-pn-danger/90 shadow-pn-danger/20'} text-sm`;
             actionBtn.onclick = () => {
                 onConfirm();
                 closeModal('modalConfirm');
@@ -2571,6 +2651,7 @@
             const subData = normalizeSubscription({
                 id: editId ? toInt(editId) : Date.now(),
                 name: $('subName').value,
+                url: $('subUrl').value,
                 price: parseFloat($('subPrice').value),
                 startDate: $('startDate').value,
                 duration: $('subDuration').value,
@@ -2638,12 +2719,20 @@
         function render() {
             normalizeState();
             saveState();
-            renderSubs();
-            renderPeople();
-            renderDash();
-            renderSettings();
-            renderCategories();
+            
+            const activeTab = localStorage.getItem('activeTab') || 'home';
+            
+            // Only render the visible portion of the UI
+            if (activeTab === 'subs') renderSubs();
+            else if (activeTab === 'people') renderPeople();
+            else if (activeTab === 'dash') renderDash();
+            else if (activeTab === 'categories') renderCategories();
+            else if (activeTab === 'settings') renderSettings();
         }
+
+        // Debounced search handlers
+        window.renderSubsDebounced = debounce(() => renderSubs(), 200);
+        window.renderPeopleDebounced = debounce(() => renderPeople(), 200);
 
         function renderCharts() {
             if (dashView !== 'overview') return;
@@ -2670,11 +2759,7 @@
 
             // 1. Donut Chart
             const donutCtx = $('expenseDonutChart').getContext('2d');
-            if (expenseDonutChart) expenseDonutChart.destroy();
-            
-            expenseDonutChart = new Chart(donutCtx, {
-                type: 'doughnut',
-                data: {
+            const donutData = {
                     labels: currentSubs.map(s => s.name),
                     datasets: [{
                         data: currentSubs.map(s => s.price),
@@ -2682,7 +2767,15 @@
                         borderWidth: 0,
                         hoverOffset: 10
                     }]
-                },
+            };
+
+            if (expenseDonutChart) {
+                expenseDonutChart.data = donutData;
+                expenseDonutChart.update();
+            } else {
+                expenseDonutChart = new Chart(donutCtx, {
+                    type: 'doughnut',
+                    data: donutData,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -2708,27 +2801,32 @@
                     cutout: '70%'
                 }
             });
+            }
 
             // 2. Bar Chart
             const barCtx = $('monthlyBarChart').getContext('2d');
-            if (monthlyBarChart) monthlyBarChart.destroy();
-
             const labels = [];
-            const data = [];
+            const barValues = [];
             for (let i = 0; i < 12; i++) {
                 const d = new Date(targetYear, targetMonth + i, 1);
                 labels.push(meses[d.getMonth()].substring(0, 3));
                 const mSubs = getActiveSubsForMonth(d.getMonth(), d.getFullYear());
                 const filteredMSubs = dashCategoryFilter === 'all' ? mSubs : mSubs.filter(s => s.category === dashCategoryFilter);
-                data.push(filteredMSubs.reduce((sum, s) => sum + s.price, 0));
+                barValues.push(filteredMSubs.reduce((sum, s) => sum + s.price, 0));
             }
 
-            monthlyBarChart = new Chart(barCtx, {
-                type: 'bar',
-                data: {
+            const barData = {
                     labels: labels,
-                    datasets: [{ label: 'Total', data: data, backgroundColor: primaryColor, borderRadius: 10 }]
-                },
+                datasets: [{ label: 'Total', data: barValues, backgroundColor: primaryColor, borderRadius: 10 }]
+            };
+
+            if (monthlyBarChart) {
+                monthlyBarChart.data = barData;
+                monthlyBarChart.update();
+            } else {
+                monthlyBarChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: barData,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -2752,11 +2850,10 @@
                     }
                 }
             });
+            }
 
             // 3. Balance Bar Chart (Net balance per person)
             const balanceCtx = $('balanceBarChart').getContext('2d');
-            if (balanceBarChart) balanceBarChart.destroy();
-
             const peopleMap = getPeopleMap();
             const currentBalance = buildBalances(currentSubs, peopleMap);
             const peopleData = state.pessoas.map(p => {
@@ -2764,9 +2861,7 @@
                 return { name: p.name, net: stats.recebe - stats.deve, color: p.color };
             }).sort((a, b) => b.net - a.net);
 
-            balanceBarChart = new Chart(balanceCtx, {
-                type: 'bar',
-                data: {
+            const balanceData = {
                     labels: peopleData.map(p => p.name),
                     datasets: [{
                         label: 'Saldo Líquido',
@@ -2774,7 +2869,15 @@
                         backgroundColor: peopleData.map(p => getColorHex(p.color)),
                         borderRadius: 6
                     }]
-                },
+            };
+
+            if (balanceBarChart) {
+                balanceBarChart.data = balanceData;
+                balanceBarChart.update();
+            } else {
+                balanceBarChart = new Chart(balanceCtx, {
+                    type: 'bar',
+                    data: balanceData,
                 options: {
                     indexAxis: 'y',
                     responsive: true,
@@ -2802,17 +2905,14 @@
                     }
                 }
             });
+            }
 
             // 5. Comparison Bar Chart (Prev vs Current)
             const compCtx = $('comparisonBarChart').getContext('2d');
-            if (comparisonBarChart) comparisonBarChart.destroy();
-
             const prevTotal = prevMonthSubs.reduce((sum, s) => sum + s.price, 0);
             const currentTotal = currentSubs.reduce((sum, s) => sum + s.price, 0);
 
-            comparisonBarChart = new Chart(compCtx, {
-                type: 'bar',
-                data: {
+            const compData = {
                     labels: [meses[prevMonthDate.getMonth()], meses[targetMonth]],
                     datasets: [{
                         data: [prevTotal, currentTotal],
@@ -2820,7 +2920,15 @@
                         borderRadius: 10,
                         barThickness: 40
                     }]
-                },
+            };
+
+            if (comparisonBarChart) {
+                comparisonBarChart.data = compData;
+                comparisonBarChart.update();
+            } else {
+                comparisonBarChart = new Chart(compCtx, {
+                    type: 'bar',
+                    data: compData,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -2841,27 +2949,32 @@
                     }
                 }
             });
+            }
 
             // 4. Category Donut Chart
             const catCtx = $('categoryDonutChart').getContext('2d');
-            if (categoryDonutChart) categoryDonutChart.destroy();
-
             const catTotals = {};
             currentSubs.forEach(s => {
                 const cat = s.category || 'Sem Categoria';
                 catTotals[cat] = (catTotals[cat] || 0) + s.price;
             });
 
-            categoryDonutChart = new Chart(catCtx, {
-                type: 'doughnut',
-                data: {
+            const catDonutData = {
                     labels: Object.keys(catTotals),
                     datasets: [{
                         data: Object.values(catTotals),
                         backgroundColor: chartColors,
                         borderWidth: 0
                     }]
-                },
+            };
+
+            if (categoryDonutChart) {
+                categoryDonutChart.data = catDonutData;
+                categoryDonutChart.update();
+            } else {
+                categoryDonutChart = new Chart(catCtx, {
+                    type: 'doughnut',
+                    data: catDonutData,
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
@@ -2893,6 +3006,7 @@
                     cutout: '65%'
                 }
             });
+            }
         }
 
         function renderSettings() {
@@ -2913,6 +3027,11 @@
             const grid = $('categoriesGrid');
             if (!grid) return;
             const empty = $('empty-categories');
+            const searchTerm = ($('categorySearchInput')?.value || '').toLowerCase().trim();
+
+            const filteredCategories = state.categorias.filter(cat => 
+                (typeof cat === 'object' ? cat.name : cat).toLowerCase().includes(searchTerm)
+            );
             
             const summary = $('categories-top-summary');
             if (summary) {
@@ -2922,29 +3041,29 @@
                 const totalCategorizedValue = activeSubs.filter(s => s.category).reduce((acc, s) => acc + s.price, 0);
 
                 summary.innerHTML = `
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Total Categorias</p>
                         <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${state.categorias.length}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <div class="w-10 h-10 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Categorias em Uso</p>
                         <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${categoriesInUse}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <div class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Serviços Vinculados</p>
                         <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${categorizedCount}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-sm">
-                        <div class="w-10 h-10 bg-pn-danger/10 text-pn-danger rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-pn-danger/10 text-pn-danger rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Custo Categorizado</p>
@@ -2959,15 +3078,22 @@
                 return;
             }
 
+            if (filteredCategories.length === 0 && searchTerm) {
+                grid.innerHTML = "";
+                empty?.classList.remove('hidden');
+                empty.querySelector('p').innerText = `Nenhuma categoria encontrada para "${searchTerm}"`;
+                return;
+            }
+
             empty?.classList.add('hidden');
 
-            grid.innerHTML = [...state.categorias].sort((a, b) => a.name.localeCompare(b.name)).map(cat => {
+            grid.innerHTML = [...filteredCategories].sort((a, b) => a.name.localeCompare(b.name)).map(cat => {
                 const subsInCat = state.assinaturas.filter(s => s.category === cat.name);
                 const activeSubsInCat = subsInCat.filter(isSubActiveToday);
                 const totalValue = activeSubsInCat.reduce((acc, s) => acc + s.price, 0);
 
                 return `
-                    <div onclick="if(event.target.closest('button')) return; window.openCategoryDetail('${escapeHtml(cat.name)}')" class="bg-white dark:bg-pn-surface-dark p-6 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:border-pn-primary/40 hover:shadow-xl hover:shadow-pn-primary/5 hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
+                    <div onclick="if(event.target.closest('button')) return; window.openCategoryDetail('${escapeHtml(cat.name)}')" class="bg-white dark:bg-pn-surface-dark p-6 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
                         <div class="flex justify-between items-start gap-3 mb-4">
                             <div class="flex items-center gap-3 min-w-0">
                                 <div class="${cat.color || 'bg-pn-primary'} text-white w-12 h-12 rounded-pn flex items-center justify-center font-bold text-xl group-hover:scale-110 transition-all shrink-0 shadow-lg shadow-pn-primary/10">
@@ -2994,6 +3120,18 @@
                     </div>
                 `;
             }).join('');
+
+            // Adicionar card "Adicionar Categoria"
+            grid.innerHTML += `
+                <div onclick="window.openCategoryModal()" class="bg-white dark:bg-pn-surface-dark p-6 rounded-pn border-2 border-dashed border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group cursor-pointer flex items-center justify-center">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mx-auto mb-3 transition-transform group-hover:scale-110">
+                            <i class="fas fa-folder-plus text-xl"></i>
+                        </div>
+                        <p class="text-sm font-bold text-slate-700 dark:text-white group-hover:text-pn-primary transition-colors">Adicionar Categoria</p>
+                    </div>
+                </div>
+            `;
         }
 
         window.openCategoryDetail = function(catName) {
@@ -3054,7 +3192,7 @@
             const grid = $('subsGrid');
             const empty = $('empty-subs');
             const summary = $('subs-top-summary');
-            const searchTerm = ($('subSearchInput')?.value || '').toLowerCase().trim();
+            const searchTerm = ($('subSearchInput')?.value || '').toLowerCase();
 
             const filteredSubs = state.assinaturas.filter(sub => 
                 sub.name.toLowerCase().includes(searchTerm)
@@ -3064,7 +3202,7 @@
             const activeSubs = state.assinaturas.filter(isSubActiveToday);
             const totalMonthly = activeSubs.reduce((acc, sub) => acc + (sub.cycle === "Mensal" ? sub.price : sub.price / 12), 0);
             const totalPendingReceivable = activeSubs.reduce((acc, sub) => acc + getPendingReceivableTotal(sub), 0);
-            const totalSavings = activeSubs.reduce((acc, sub) => acc + (sub.price * (sub.memberIds.length - 1)), 0);
+            const totalSavings = activeSubs.reduce((acc, sub) => acc + getSubSavings(sub), 0);
             
             const catCounts = {};
             activeSubs.forEach(s => { if(s.category) catCounts[s.category] = (catCounts[s.category] || 0) + 1; });
@@ -3072,29 +3210,29 @@
 
             if (summary) {
                 summary.innerHTML = `
-                    <div class="bg-white dark:bg-pn-surface-dark p-4 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
-                        <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Serviços Ativos</p>
                         <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${activeSubs.length}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
-                        <div class="w-10 h-10 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Custo Mensal</p>
                         <p class="text-xl font-black text-pn-success mt-1">${formatBRL(totalMonthly)}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-4 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
-                        <div class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                        <div class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">A Receber</p>
                         <p class="text-xl font-black text-pn-warning mt-1">${formatBRL(totalPendingReceivable)}</p>
                     </div>
-                    <div class="bg-white dark:bg-pn-surface-dark p-4 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft border-l-4 border-l-pn-primary">
-                        <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4">
+                    <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group border-l-4 border-l-pn-primary">
+                        <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                             <i class="fas fa-piggy-bank text-lg"></i>
                         </div>
                         <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Economia do Grupo</p>
@@ -3122,11 +3260,11 @@
                 const splitPrice = getSplitPrice(sub);
                 const status = getSubStatus(sub);
                 return `
-                    <div onclick="window.openSubDetail(${sub.id})" class="bg-white dark:bg-pn-surface-dark rounded-pn border border-slate-200 dark:border-slate-800 overflow-hidden cursor-pointer hover:border-pn-primary/50 hover:shadow-xl hover:shadow-pn-primary/5 hover:-translate-y-1 transition-all duration-300 group">
+                    <div onclick="window.openSubDetail(${sub.id})" class="bg-white dark:bg-pn-surface-dark rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft overflow-hidden cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group">
                         <div class="p-6">
                             <div class="flex justify-between items-start gap-3 mb-4">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <div class="${getCategoryColor(sub.category)} text-white w-12 h-12 rounded-pn flex items-center justify-center font-bold text-xl group-hover:scale-110 transition-transform shrink-0 shadow-sm">
+                                    <div class="${getCategoryColor(sub.category)} text-white w-12 h-12 rounded-pn flex items-center justify-center font-bold text-xl transition-transform group-hover:scale-110 shrink-0 shadow-sm">
                                         <i class="${getCategoryIcon(sub.category)}"></i>
                                     </div>
                                     <div class="min-w-0">
@@ -3152,6 +3290,18 @@
                     </div>
                 `;
             }).join('');
+
+            // Adicionar card "Adicionar Assinatura"
+            grid.innerHTML += `
+                <div onclick="window.openSubModal()" class="bg-white dark:bg-pn-surface-dark rounded-pn border-2 border-dashed border-slate-200 dark:border-slate-800 shadow-soft overflow-hidden cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group flex items-center justify-center p-6">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mx-auto mb-3 transition-transform group-hover:scale-110">
+                            <i class="fas fa-plus text-xl"></i>
+                        </div>
+                        <p class="text-sm font-bold text-slate-700 dark:text-white group-hover:text-pn-primary transition-colors">Adicionar Assinatura</p>
+                    </div>
+                </div>
+            `;
         }
 
         function renderPeople() {
@@ -3159,6 +3309,8 @@
             const now = new Date();
             const activeSubs = getActiveSubsForMonth(now.getMonth(), now.getFullYear());
             const balance = buildBalances(activeSubs, peopleMap);
+            const searchTerm = ($('peopleSearchInput')?.value || '').toLowerCase();
+            const empty = $('empty-people');
             
             let globalReceber = 0;
             let globalPagar = 0;
@@ -3171,30 +3323,39 @@
                 totalPendencias += activeSubs.filter(sub => sub.memberIds.includes(p.id) && p.id !== sub.payerId && getMemberPaymentStatus(sub, p.id) !== 'paid').length;
             });
 
+            const filteredPeople = state.pessoas.filter(p => p.name.toLowerCase().includes(searchTerm));
+
+            if (filteredPeople.length === 0 && searchTerm) {
+                $('peopleGrid').innerHTML = "";
+                empty?.classList.remove('hidden');
+                return;
+            }
+            empty?.classList.add('hidden');
+
             $('people-top-summary').innerHTML = `
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
-                    <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <div class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Participantes</p>
                     <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${state.pessoas.length}</p>
                 </div>
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
-                    <div class="w-10 h-10 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mb-4">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <div class="w-10 h-10 bg-pn-success/10 text-pn-success rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Total a Receber</p>
                     <p class="text-xl font-black text-pn-success mt-1">${formatBRL(globalReceber)}</p>
                 </div>
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
-                    <div class="w-10 h-10 bg-pn-danger/10 text-pn-danger rounded-pn flex items-center justify-center mb-4">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <div class="w-10 h-10 bg-pn-danger/10 text-pn-danger rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Total a Pagar</p>
                     <p class="text-xl font-black text-pn-danger mt-1">${formatBRL(globalPagar)}</p>
                 </div>
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft">
-                    <div class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <div class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Pendências</p>
@@ -3202,17 +3363,17 @@
                 </div>
             `;
 
-            $('peopleGrid').innerHTML = state.pessoas.map(person => {
+            $('peopleGrid').innerHTML = filteredPeople.map(person => {
                 const stats = balance[person.id] || { deve: 0, recebe: 0 };
                 const managedCount = state.assinaturas.filter(sub => sub.payerId === person.id).length;
                 const totalSubs = state.assinaturas.filter(sub => sub.memberIds.includes(person.id) || sub.payerId === person.id).length;
                 const pendingPayments = activeSubs.filter(sub => sub.memberIds.includes(person.id) && person.id !== sub.payerId && getMemberPaymentStatus(sub, person.id) !== 'paid').length;
 
                 return `
-                    <button onclick="window.openUserDashboard(${person.id})" class="w-full text-left bg-white dark:bg-pn-surface-dark p-6 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:border-pn-primary/50 hover:shadow-xl hover:shadow-pn-primary/5 hover:-translate-y-1 transition-all duration-300 group">
+                    <button onclick="window.openUserDashboard(${person.id})" class="w-full text-left bg-white dark:bg-pn-surface-dark p-6 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group">
                         <div class="flex justify-between items-start gap-3 mb-4">
                             <div class="flex items-center gap-3 min-w-0">
-                                <div class="${person.color || 'bg-pn-primary'} text-white w-12 h-12 rounded-pn flex items-center justify-center font-bold text-xl group-hover:scale-110 transition-transform shrink-0 shadow-sm">
+                                <div class="${person.color || 'bg-pn-primary'} text-white w-12 h-12 rounded-pn flex items-center justify-center font-bold text-xl transition-transform group-hover:scale-110 shrink-0 shadow-sm">
                                     ${escapeHtml(person.name.charAt(0))}
                                 </div>
                                 <div class="min-w-0">
@@ -3244,6 +3405,18 @@
                     </button>
                 `;
             }).join('');
+
+            // Adicionar card "Adicionar Pessoa"
+            $('peopleGrid').innerHTML += `
+                <div onclick="window.openPersonModal()" class="w-full text-left bg-white dark:bg-pn-surface-dark p-6 rounded-pn border-2 border-dashed border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group flex items-center justify-center">
+                    <div class="text-center">
+                        <div class="w-12 h-12 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mx-auto mb-3 transition-transform group-hover:scale-110">
+                            <i class="fas fa-user-plus text-xl"></i>
+                        </div>
+                        <p class="text-sm font-bold text-slate-700 dark:text-white group-hover:text-pn-primary transition-colors">Adicionar Pessoa</p>
+                    </div>
+                </div>
+            `;
         }
 
         function renderDash() {
@@ -3329,37 +3502,37 @@
 
             const annualTotal = avgMonthly * 12;
             const activeSubsCount = state.assinaturas.filter(isSubActiveToday).length;
-            const totalSavings = filteredActiveSubs.reduce((acc, sub) => acc + (sub.price * (sub.memberIds.length - 1)), 0);
+            const totalSavings = filteredActiveSubs.reduce((acc, sub) => acc + getSubSavings(sub), 0);
 
             const momTrend = prevAvgMonthly > 0 ? ((avgMonthly - prevAvgMonthly) / prevAvgMonthly) * 100 : 0;
             const trendClass = momTrend > 0 ? 'text-rose-500' : (momTrend < 0 ? 'text-emerald-500' : 'text-slate-400');
             const trendIcon = momTrend > 0 ? '↑' : (momTrend < 0 ? '↓' : '→');
 
             topSummary.innerHTML = `
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 relative overflow-hidden hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 relative overflow-hidden hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
                     <div class="absolute top-4 right-4 text-[10px] font-bold ${trendClass}">${trendIcon} ${Math.abs(momTrend).toFixed(1)}%</div>
-                    <div title="Média de gastos mensais baseada no ciclo das assinaturas ativas (Mensal ou Anual)." class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 cursor-help">
+                    <div title="Média de gastos mensais baseada no ciclo das assinaturas ativas (Mensal ou Anual)." class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 cursor-help transition-transform group-hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Custo Mensal</p>
                     <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${formatBRL(avgMonthly)}</p>
                 </div>
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
-                    <div title="Economia total estimada do grupo por estarem dividindo os custos." class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-pn flex items-center justify-center mb-4 cursor-help">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <div title="Economia total estimada do grupo por estarem dividindo os custos." class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-pn flex items-center justify-center mb-4 cursor-help transition-transform group-hover:scale-110">
                         <i class="fas fa-hand-holding-dollar text-lg"></i>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Economia Gerada</p>
                     <p class="text-xl font-black text-emerald-600 mt-1">${formatBRL(totalSavings)}</p>
                 </div>
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
-                    <div title="Quantidade de assinaturas que estão marcadas como ativas no momento." class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4 cursor-help">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <div title="Quantidade de assinaturas que estão marcadas como ativas no momento." class="w-10 h-10 bg-pn-warning/10 text-pn-warning rounded-pn flex items-center justify-center mb-4 cursor-help transition-transform group-hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Serviços Ativos</p>
                     <p class="text-xl font-black text-slate-900 dark:text-white mt-1">${activeSubsCount}</p>
                 </div>
-                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-300">
-                    <div title="Total de participantes cadastrados que podem ser incluídos nas divisões." class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 cursor-help">
+                <div class="bg-white dark:bg-pn-surface-dark p-5 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group">
+                    <div title="Total de participantes cadastrados que podem ser incluídos nas divisões." class="w-10 h-10 bg-pn-primary/10 text-pn-primary rounded-pn flex items-center justify-center mb-4 cursor-help transition-transform group-hover:scale-110">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                     </div>
                     <p class="text-[10px] font-black text-slate-400 dark:text-pn-text-secondary uppercase tracking-widest">Pessoas</p>
@@ -3430,9 +3603,9 @@
                 const pendingPayments = currentSubs.filter(sub => sub.memberIds.includes(person.id) && person.id !== sub.payerId && getMemberPaymentStatus(sub, person.id) !== 'paid').length;
 
                 return `
-                    <button onclick="window.openUserDashboard(${person.id})" class="w-full text-left p-4 border border-slate-100 dark:border-slate-800 rounded-pn flex justify-between items-center bg-white dark:bg-pn-surface-dark hover:border-pn-primary/50 hover:-translate-y-1 hover:shadow-md transition-all group">
+                    <button onclick="window.openUserDashboard(${person.id})" class="w-full text-left p-4 border border-slate-200 dark:border-slate-800 shadow-soft rounded-pn flex justify-between items-center bg-white dark:bg-pn-surface-dark hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-pn bg-pn-primary/10 text-pn-primary flex items-center justify-center font-bold text-sm">
+                            <div class="w-10 h-10 rounded-pn bg-pn-primary/10 text-pn-primary flex items-center justify-center font-bold text-sm transition-transform group-hover:scale-110">
                                 ${escapeHtml(person.name.charAt(0))}
                             </div>
                             <div>
@@ -3485,7 +3658,7 @@
                     const liquid = stats.recebe - stats.deve;
                     if (liquid === 0) return '';
                     const pendingPayments = activeSubs.filter(sub => sub.memberIds.includes(person.id) && person.id !== sub.payerId && getMemberPaymentStatus(sub, person.id) !== 'paid').length;
-                    return `<button onclick="window.openUserDashboard(${person.id})" class="w-full text-left bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm hover:border-slate-200 dark:hover:border-indigo-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition"><div class="flex justify-between items-center mb-2"><span class="font-bold text-xs text-slate-700 dark:text-slate-200">${escapeHtml(person.name)}</span><span class="font-black text-xs ${liquid > 0 ? 'text-emerald-600' : 'text-rose-500'}">${formatBRL(Math.abs(liquid))}</span></div><div class="mb-2"><span class="text-[10px] font-black ${pendingPayments === 0 ? 'text-emerald-600' : 'text-amber-600'}">${pendingPayments === 0 ? 'Sem pendências' : `${pendingPayments} pendente(s)`}</span></div><div class="space-y-1">${stats.detail.map(detail => `<div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400"><span>${detail.name} <em class="opacity-60">(${detail.type})</em></span><span>${formatBRL(detail.value)}</span></div>`).join('')}</div></button>`;
+                    return `<button onclick="window.openUserDashboard(${person.id})" class="w-full text-left bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-soft hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-300 group"><div class="flex justify-between items-center mb-2"><span class="font-bold text-xs text-slate-700 dark:text-slate-200 group-hover:text-pn-primary">${escapeHtml(person.name)}</span><span class="font-black text-xs ${liquid > 0 ? 'text-emerald-600' : 'text-rose-500'}">${formatBRL(Math.abs(liquid))}</span></div><div class="mb-2"><span class="text-[10px] font-black ${pendingPayments === 0 ? 'text-emerald-600' : 'text-amber-600'}">${pendingPayments === 0 ? 'Sem pendências' : `${pendingPayments} pendente(s)`}</span></div><div class="space-y-1">${stats.detail.map(detail => `<div class="flex justify-between text-[10px] text-slate-500 dark:text-slate-400"><span>${detail.name} <em class="opacity-60">(${detail.type})</em></span><span>${formatBRL(detail.value)}</span></div>`).join('')}</div></button>`;
                 }).join('')}</div></div><div><p class="text-[10px] font-black text-slate-400 uppercase mb-3 border-b dark:border-slate-800 pb-1">Assinaturas Ativas</p><div class="grid grid-cols-1 sm:grid-cols-3 gap-2">${activeSubs.map(sub => `<button onclick="window.openSubDetail(${sub.id})" class="w-full text-left bg-indigo-50/50 dark:bg-indigo-900/20 p-2 rounded-lg border border-indigo-100/50 dark:border-indigo-800/50 flex justify-between items-center hover:bg-indigo-100/60 dark:hover:bg-indigo-800/60 transition"><span class="text-[11px] font-bold text-indigo-700 dark:text-indigo-400">${escapeHtml(sub.name)}</span><span class="text-[11px] font-black text-indigo-600 dark:text-indigo-300">${formatBRL(sub.price)}</span></button>`).join('')}</div></div></div></div></div>`;
             }
 
@@ -3499,10 +3672,10 @@
                 const netColor = annualNet > 0 ? 'text-emerald-600' : (annualNet < 0 ? 'text-rose-500' : 'text-slate-400');
                 
                 return `
-                    <div onclick="window.openUserDashboard(${person.id})" class="bg-white dark:bg-pn-surface-dark p-6 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-6 cursor-pointer hover:border-pn-primary/50 hover:-translate-y-1 hover:shadow-lg transition-all group">
+                    <div onclick="window.openUserDashboard(${person.id})" class="bg-white dark:bg-pn-surface-dark p-6 rounded-pn border border-slate-200 dark:border-slate-800 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-6 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/5 hover:-translate-y-1 transition-all duration-300 group">
                         <div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center lg:items-start xl:items-center gap-4 min-w-[200px]">
                             <div class="flex items-center gap-4 min-w-0">
-                                <div class="w-12 h-12 rounded-pn bg-pn-primary/10 text-pn-primary flex items-center justify-center font-bold text-xl shrink-0">
+                                <div class="w-12 h-12 rounded-pn bg-pn-primary/10 text-pn-primary flex items-center justify-center font-bold text-xl transition-transform group-hover:scale-110 shrink-0">
                                     ${escapeHtml(person.name.charAt(0))}
                                 </div>
                                 <div class="min-w-0">

@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-04-16
+
+### UI e Consistência Visual
+- **Unificação de Cards**: Padronização visual completa de todos os cards de resumo (KPIs) e cards de listagem em todas as páginas, utilizando `shadow-soft`, bordas de 20px e efeitos de hover consistentes.
+- **Cabeçalhos Padronizados**: Alinhamento do layout de cabeçalho das páginas de Assinaturas, Pessoas e Categorias, garantindo que títulos, subtítulos e ações sigam a mesma hierarquia visual.
+- **Cards de Adição**: Inclusão de cards com borda tracejada ao final de cada lista para facilitar a criação de novos registros com um clique.
+- **Animações**: Adição de micro-interações de escala em ícones e elevação de cards ao passar o mouse para feedback tátil.
+
+### Pesquisa e Filtros
+- **Busca Global**: Expansão do recurso de busca em tempo real para as páginas de Pessoas e Categorias, permitindo localização rápida de registros por nome.
+- **Empty States**: Implementação de mensagens de feedback visual quando nenhum resultado é encontrado nas buscas.
+
+### Usabilidade e Segurança
+- **Confirmação de Links Externos**: Adição de uma etapa de segurança que solicita confirmação antes de abrir links de serviços fora da aplicação.
+- **Refinamento de Diálogos**: Evolução do sistema de confirmação para suportar variantes semânticas (Info, Sucesso e Perigo) com cores e ícones específicos para cada tipo de ação.
+
 ## 2026-04-15
 
 ### Inteligência Financeira
@@ -187,14 +203,3 @@
 
 - Criação de `.gitignore` ignorando apenas `.codex`.
 - Atualização contínua do `README.md` para refletir a estrutura atual.
-
-## Recursos Futuros (Planejamento)
-
-### Funcionalidades em estudo
-
-- **Categorização**: Tags para agrupar assinaturas (Streaming, Casa, Trabalho).
-- **Gráficos e Visualização**: Gráficos de rosca para distribuição de gastos e barras para histórico mensal.
-- **Suporte Multi-moeda**: Conversão manual de valores em USD/EUR para BRL.
-- **Mobile**: Transformação em PWA para instalação como aplicativo no celular.
-- **Pesquisa e Filtros**: Busca rápida na lista de pessoas (assinaturas já implementadas).
-- **Notificações Locais**: Lembretes de vencimento baseados na data de início e ciclo.
